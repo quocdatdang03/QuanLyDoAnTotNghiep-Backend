@@ -13,7 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class StudentAccountDto {
 
     Long studentId;
-    boolean isLeader;
-    boolean isJoinedTeam;
     ClassDto studentClass;
 }
