@@ -1,0 +1,13 @@
+package com.quanlydoantotnghiep.DoAnTotNghiep.service;
+
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.StudentAccountRequest;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccountResponse;
+
+public interface StudentService {
+
+//    StudentAccountResponse getStudentByStudentCode(String studentCode);
+    StudentAccountResponse createAccountStudent(StudentAccountRequest request);
+//    ObjectResponse getAllStudents(int pageNumber, int pageSize, String sortBy, String sortDir);
+//    ObjectResponse getAllStudentsByFacultyId(Long facultyId ,int pageNumber, int pageSize, String sortBy, String sortDir);
+//    ObjectResponse searchStudentsByKeywordAndFacultyId(String keyword, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir);
+}

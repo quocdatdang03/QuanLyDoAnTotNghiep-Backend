@@ -21,10 +21,6 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long studentId;
 
-    boolean isLeader;
-
-    boolean isJoinedTeam;
-
     @OneToOne
     @JoinColumn(name = "accountId", referencedColumnName = "accountId")
     Account account;

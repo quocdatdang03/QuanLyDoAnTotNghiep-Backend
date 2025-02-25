@@ -25,7 +25,7 @@ spring:
           starttls:
             enable: true
 
-##config jwt
-#app:
-#  jwt-secret: c0599befa5c9127ae1339c723e60a6bb297e25688c4fc23794a9eba968fd63d4 #jwt secret key : dangquocdat (sha256 ecrypt)
-#  jwt-expiration-milliseconds: 1300000 # 5 minutes
+#config jwt
+app:
+  jwt-secret: c0599befa5c9127ae1339c723e60a6bb297e25688c4fc23794a9eba968fd63d4 #jwt secret key : dangquocdat (sha256 ecrypt)
+  jwt-expiration-milliseconds: 1300000 # 5 minutes

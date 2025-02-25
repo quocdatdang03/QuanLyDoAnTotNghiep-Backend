@@ -62,13 +62,13 @@
 			<version>3.0.0</version>
 		</dependency>
 
-	 	<!--&lt;!&ndash; Spring Security&ndash;&gt;
+	 	<!-- Spring Security-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		&lt;!&ndash; JWT &ndash;&gt;
+		<!-- JWT -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
@@ -87,7 +87,7 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.12.6</version>
 			<scope>runtime</scope>
-		</dependency>-->
+		</dependency>
 
 		<!-- Java Mail Sender -->
 		<dependency>
