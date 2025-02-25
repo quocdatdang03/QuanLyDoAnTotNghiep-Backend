@@ -39,6 +39,10 @@ public class Project {
     @JoinColumn(name = "projectStatusId", referencedColumnName = "projectStatusId")
     ProjectStatus projectStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "semesterId", referencedColumnName = "semesterId")
+    Semester semester;
+
     @OneToMany(mappedBy = "project")
     Set<ProgressReport> progressReports;
 
