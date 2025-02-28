@@ -13,15 +13,20 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "SchoolYears")
+@Table(name = "NAMHOC")
 public class SchoolYear {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maNamHoc")
     Long schoolYearId;
 
+    @Column(name = "namHoc")
     String schoolYearName;
 
     @OneToMany(mappedBy = "schoolYear")
     Set<Semester> semesters;
+
+    @Column(name = "daXoa")
+    boolean flagDelete;
 }

@@ -14,32 +14,35 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "ProgressReviews")
+@Table(name = "DANHGIATIENDO")
 public class ProgressReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maDanhGia")
     Long progressReviewId;
 
-    @Column(columnDefinition = "nvarchar(255)",nullable = false)
+    @Column(name = "tieuDeDanhGia", columnDefinition = "nvarchar(255)",nullable = false)
     String progressReviewTitle;
 
-    @Column(columnDefinition = "text",nullable = false)
+    @Column(name = "noiDungDanhGia", columnDefinition = "text",nullable = false)
     String progressReviewContent;
 
+    @Column(name = "trangThaiDanhGia")
     boolean isApproved;
 
+    @Column(name = "ngayGui")
     LocalDateTime createdDate;
 
     @ManyToOne
-    @JoinColumn(name="teacherId", referencedColumnName = "teacherId")
+    @JoinColumn(name="maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
 
     @ManyToOne
-    @JoinColumn(name = "project", referencedColumnName = "projectId")
+    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
     Project project;
 
     @ManyToOne
-    @JoinColumn(name = "progressReportId", referencedColumnName = "progressReportId")
+    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao")
     ProgressReport progressReport;
 }

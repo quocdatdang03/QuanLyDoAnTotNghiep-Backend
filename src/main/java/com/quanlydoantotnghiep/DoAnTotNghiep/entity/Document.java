@@ -10,25 +10,27 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Documents")
+@Table(name = "TAILIEU")
 public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maTaiLieu")
     Long documentId;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "tenTaiLieu",columnDefinition = "text")
     String documentName;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "moTa",columnDefinition = "text")
     String documentDescription;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "duongDanFile",columnDefinition = "text")
     String documentFile;
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 
     @ManyToOne
-    @JoinColumn(name = "teacherId", referencedColumnName = "teacherId")
+    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
 }

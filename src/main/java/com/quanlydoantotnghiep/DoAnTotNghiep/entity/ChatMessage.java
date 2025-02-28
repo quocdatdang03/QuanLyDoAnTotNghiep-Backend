@@ -13,29 +13,30 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "ChatMessages")
+@Table(name = "TINNHAN")
 public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maTinNhan")
     Long chatMessageId;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(name = "noiDung",columnDefinition = "TEXT", nullable = false)
     String content;
 
-    @Column(nullable = false)
+    @Column(name = "thoiGianGui",nullable = false)
     LocalDateTime timestamp;
 
     @ManyToOne
-    @JoinColumn(name = "chatRoomId", nullable = false)
+    @JoinColumn(name = "maPhongChat", nullable = false)
     ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(name = "senderId", referencedColumnName = "accountId", nullable = false)
+    @JoinColumn(name = "maNguoiGui", referencedColumnName = "maTaiKhoan", nullable = false)
     Account sender;
 
     @ManyToOne
-    @JoinColumn(name = "parentChatMessageId", referencedColumnName = "chatMessageId", nullable = true)
+    @JoinColumn(name = "maTinNhanGoc", referencedColumnName = "maTinNhan", nullable = true)
     ChatMessage parentMessage;
 
     boolean isDeleted;

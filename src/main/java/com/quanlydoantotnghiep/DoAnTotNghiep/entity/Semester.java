@@ -13,26 +13,34 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Semesters")
+@Table(name = "HOCKY")
 public class Semester {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maHocKy")
     Long semesterId;
 
+    @Column(name = "hocKy")
     String semesterName;
 
     @ManyToOne
-    @JoinColumn(name = "schoolYearId", referencedColumnName = "schoolYearId")
+    @JoinColumn(name = "maNamHoc", referencedColumnName = "maNamHoc")
     SchoolYear schoolYear;
 
     @ManyToMany
     @JoinTable(
-            name = "Semester_Account",
-            joinColumns = @JoinColumn(name = "semesterId"),
-            inverseJoinColumns = @JoinColumn(name = "accountId")
+            name = "HOCKY_TAIKHOAN",
+            joinColumns = @JoinColumn(name = "maHocKy"),
+            inverseJoinColumns = @JoinColumn(name = "maTaiKhoan")
     )
     Set<Account> accounts;
+
+    @Column(name = "laHocKyHienTai")
+    boolean isCurrent;
+
+    @Column(name = "daXoa")
+    boolean flagDelete;
 
     @OneToMany(mappedBy = "semester")
     Set<Project> projects;

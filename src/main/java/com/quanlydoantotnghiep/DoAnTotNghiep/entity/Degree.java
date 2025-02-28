@@ -12,14 +12,15 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Degrees")
+@Table(name = "HOCVI")
 public class Degree {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maHocVi")
     Long degreeId;
 
-    @Column(columnDefinition = "varchar(50)", unique = true, nullable = false)
+    @Column(name = "tenHocVi",columnDefinition = "varchar(50)", unique = true, nullable = false)
     private String degreeName;
 
     @OneToMany(mappedBy = "degree")

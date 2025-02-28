@@ -16,38 +16,39 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name="Accounts")
+@Table(name="TAIKHOAN")
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maTaiKhoan")
     Long accountId;
 
     @Column(columnDefinition = "varchar(255)", nullable = false, unique = true)
     String email;
 
-    @Column(columnDefinition = "varchar(255)", nullable = false)
+    @Column(name = "matKhau",columnDefinition = "varchar(255)", nullable = false)
     String password;
 
-    @Column(columnDefinition = "varchar(50)", nullable = false, unique = true)
+    @Column(name = "maSo",columnDefinition = "varchar(50)", nullable = false, unique = true)
     private String code;
 
-    @Column(columnDefinition = "nvarchar(50)", nullable = false)
+    @Column(name = "hoTen",columnDefinition = "nvarchar(50)", nullable = false)
     private String fullName;
 
-    @Column(nullable = false)
+    @Column(name = "ngaySinh",nullable = false)
     LocalDate dateOfBirth;
 
-    @Column(columnDefinition = "varchar(50)", nullable = false, unique = true)
+    @Column(name = "soDienThoai",columnDefinition = "varchar(50)", nullable = false, unique = true)
     String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(name = "gioiTinh",nullable = false)
     boolean gender;
 
-    @Column(columnDefinition = "varchar(50)", nullable = false)
+    @Column(name = "diaChi",columnDefinition = "varchar(50)", nullable = false)
     String address;
 
-    @Column(columnDefinition = "text", nullable = true)
+    @Column(name = "hinhAnh",columnDefinition = "text", nullable = true)
     String image;
 
 
@@ -57,9 +58,9 @@ public class Account {
     // (E.g. userRepository.findByEmail(email); thì nó sẽ chỉ select từ table user, chỉ khi ta gọi user.getRoles(); thì nó mới load từ table roles)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "Account_Role",
-            joinColumns = @JoinColumn(name = "accountId"),
-            inverseJoinColumns = @JoinColumn(name="roleId")
+            name = "TaiKhoan_VaiTro",
+            joinColumns = @JoinColumn(name = "maTaiKhoan"),
+            inverseJoinColumns = @JoinColumn(name="maVaiTro")
     )
     Set<Role> roles = new HashSet<>();
 
@@ -69,11 +70,15 @@ public class Account {
     @OneToOne(mappedBy = "account")
     Teacher teacher;
 
+    @Column(name = "maXacNhanDatLaiMatKhau", nullable = true)
     String resetPasswordVerificationCode;
 
+    @Column(name = "thoiGianHetHanMaXacNhanDatLaiMK", nullable = true)
     LocalDateTime resetPasswordVerificationCodeExpiredAt;
 
+    @Column(name = "daKichHoat")
     boolean enable;
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 }

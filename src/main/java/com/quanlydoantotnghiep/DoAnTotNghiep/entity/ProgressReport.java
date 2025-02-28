@@ -17,21 +17,24 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "ProgressReports")
+@Table(name = "BAOCAOTIENDO")
 public class ProgressReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maBaoCao")
     Long progressReportId;
 
-    @Column(columnDefinition = "nvarchar(100)", nullable = false)
+    @Column(name = "tieuDeBaoCao",columnDefinition = "nvarchar(100)", nullable = false)
     String progressReportName;
 
-    @Column(columnDefinition = "nvarchar(100)", nullable = false)
+    @Column(name = "noiDungBaoCao", columnDefinition = "nvarchar(100)", nullable = false)
     String progressReportContent;
 
+    @Column(name = "trangThaiXetDuyet")
     boolean isApproved;
 
+    @Column(name = "thoiGianGui")
     LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "progressReport", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -41,11 +44,11 @@ public class ProgressReport {
     Set<ProgressReview> progressReviews;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", referencedColumnName = "projectId")
+    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
     Project project;
 
     @ManyToOne
-    @JoinColumn(name = "stageId", referencedColumnName = "stageId")
+    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
     Stage stage;
 
 }

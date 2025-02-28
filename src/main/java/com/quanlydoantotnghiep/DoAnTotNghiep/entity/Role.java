@@ -13,14 +13,15 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name="Roles")
+@Table(name="VAITRO")
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maVaiTro")
     Long roleId;
 
-    @Column(columnDefinition = "varchar(50)", nullable = false, unique = true)
+    @Column(name = "tenVaiTro", columnDefinition = "varchar(50)", nullable = false, unique = true)
     String roleName;
 
     @ManyToMany(mappedBy = "roles")

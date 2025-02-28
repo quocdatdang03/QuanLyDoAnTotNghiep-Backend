@@ -13,19 +13,21 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="RefreshTokens")
+@Table(name="REFRESHTOKEN")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maRefreshToken")
     Long refreshTokenId;
 
     String token;
 
+    @Column(name = "thoiGianHetHan")
     Instant expiryDate;
 
     @OneToOne
-    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    @JoinColumn(name = "maTaiKhoan", referencedColumnName = "maTaiKhoan")
     Account account;
 }

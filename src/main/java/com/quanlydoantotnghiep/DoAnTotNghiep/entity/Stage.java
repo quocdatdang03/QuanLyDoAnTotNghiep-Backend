@@ -13,24 +13,27 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Stages")
-public class Stage { // GIAI ĐOẠN
+@Table(name = "GIAIDOAN")
+public class Stage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maGiaiDoan")
     Long stageId;
 
-    @Column(columnDefinition = "nvarchar(50)", nullable = false)
+    @Column(name = "tenGiaiDoan", columnDefinition = "nvarchar(50)", nullable = false)
     String stageName;
 
+    @Column(name = "thoiGianBatDau")
     LocalDateTime startDate;
 
+    @Column(name = "thoiGianKetThuc")
     LocalDateTime endDate;
 
     @OneToMany(mappedBy = "stage")
     Set<ProgressReport> progressReports;
 
     @ManyToOne
-    @JoinColumn(name = "teacherId", referencedColumnName = "teacherId")
+    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
 }

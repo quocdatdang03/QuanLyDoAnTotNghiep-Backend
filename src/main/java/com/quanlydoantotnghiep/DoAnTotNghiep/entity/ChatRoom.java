@@ -13,15 +13,16 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "ChatRooms")
+@Table(name = "PHONGCHAT")
 public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maPhongChat")
     Long chatRoomId;
 
     @OneToOne
-    @JoinColumn(name = "projectId", nullable = false, unique = true)
+    @JoinColumn(name = "maDeTai", nullable = false, unique = true)
     Project project;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)

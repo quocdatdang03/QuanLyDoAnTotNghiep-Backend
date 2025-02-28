@@ -9,17 +9,19 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "ProjectFiles")
+@Table(name = "TAILIEUDETAI")
 public class ProjectFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maTaiLieuDeTai")
     Long projectFileId;
 
+    @Column(name = "duongDanTaiLieuDeTai")
     String nameFile;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", referencedColumnName = "projectId")
+    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
     Project project;
 }
 

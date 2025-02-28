@@ -14,13 +14,15 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "ProjectStatus")
+@Table(name = "TRANGTHAIDETAI")
 public class ProjectStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maTrangThaiDeTai")
     Long projectStatusId;
 
+    @Column(name = "tenTrangThaiDeTai")
     String projectStatusName;
 
     @OneToMany(mappedBy = "projectStatus")

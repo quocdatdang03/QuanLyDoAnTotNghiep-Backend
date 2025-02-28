@@ -13,23 +13,24 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "Teachers")
+@Table(name = "GIANGVIENHD")
 public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maGiangVienHD")
     Long teacherId;
 
     @OneToOne
-    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    @JoinColumn(name = "maTaiKhoan", referencedColumnName = "maTaiKhoan")
     Account account;
 
     @ManyToOne
-    @JoinColumn(name = "facultyId", referencedColumnName = "facultyId")
+    @JoinColumn(name = "maKhoa", referencedColumnName = "maKhoa")
     Faculty faculty;
 
     @ManyToOne
-    @JoinColumn(name = "degreeId", referencedColumnName = "degreeId")
+    @JoinColumn(name = "maHocVi", referencedColumnName = "maHocVi")
     Degree degree;
 
     @OneToMany(mappedBy = "teacher")
@@ -45,6 +46,7 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     Set<Stage> stages;
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 
   /*

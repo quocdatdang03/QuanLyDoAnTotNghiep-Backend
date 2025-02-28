@@ -37,7 +37,7 @@ public class SecurityConfig {
 //                    authorize.requestMatchers("/api/admin/**").hasAnyRole("ADMIN");
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     //authorize.requestMatchers("/ws/**").permitAll(); // Cho phép WebSocket nhưng sẽ xác thực qua Interceptor
-                    authorize.requestMatchers("/api/**").authenticated();
+//                    authorize.requestMatchers("/api/**").authenticated();
                     authorize.anyRequest().permitAll();
                 })
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));

@@ -13,22 +13,24 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "classes")
+@Table(name = "LOPSINHHOAT")
 public class Clazz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maLopSH")
     Long classId;
 
-    @Column(columnDefinition = "varchar(50)", nullable = false)
+    @Column(name = "tenLopSH",columnDefinition = "varchar(50)", nullable = false)
     String className;
 
     @OneToMany(mappedBy = "clazz")
     Set<Student> students;
 
     @ManyToOne
-    @JoinColumn(name = "facultyId", referencedColumnName = "facultyId")
+    @JoinColumn(name = "maKhoa", referencedColumnName = "maKhoa")
     Faculty faculty;
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 }

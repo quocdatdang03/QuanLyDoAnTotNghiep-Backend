@@ -16,31 +16,32 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "Projects")
+@Table(name = "DETAI")
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maDeTai")
     Long projectId;
 
-    @Column(columnDefinition = "nvarchar(255)", nullable = false, unique = true)
+    @Column(name = "tenDeTai",columnDefinition = "nvarchar(255)", nullable = false, unique = true)
     String projectName;
 
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(name = "noiDungDeTai", columnDefinition = "text", nullable = false)
     String projectContent;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProjectFile> projectFiles = new ArrayList<>();
 
-    @Column(columnDefinition = "text", nullable = false)
+    @Column(name = "hinhAnhDeTai", columnDefinition = "text", nullable = false)
     String projectImg;
 
     @ManyToOne
-    @JoinColumn(name = "projectStatusId", referencedColumnName = "projectStatusId")
+    @JoinColumn(name = "maTrangThaiDeTai", referencedColumnName = "maTrangThaiDeTai")
     ProjectStatus projectStatus;
 
     @ManyToOne
-    @JoinColumn(name = "semesterId", referencedColumnName = "semesterId")
+    @JoinColumn(name = "maHocKy", referencedColumnName = "maHocKy")
     Semester semester;
 
     @OneToMany(mappedBy = "project")
@@ -50,8 +51,9 @@ public class Project {
     Set<ProgressReview> progressReviews;
 
     @OneToOne
-    @JoinColumn(name = "studentId", referencedColumnName = "studentId")
+    @JoinColumn(name = "maSinhVien", referencedColumnName = "maSinhVien")
     Student student;
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 }

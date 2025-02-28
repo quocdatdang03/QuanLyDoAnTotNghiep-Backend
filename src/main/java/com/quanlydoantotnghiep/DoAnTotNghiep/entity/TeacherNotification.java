@@ -13,22 +13,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "TeacherNotifications")
+@Table(name = "THONGBAO")
 public class TeacherNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maThongBao")
     Long teacherNotificationId;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "tieuDeThongBao", columnDefinition = "text")
     String topic;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "noiDungThongBao", columnDefinition = "text")
     String content;
 
+    @Column(name = "ngayTao")
     LocalDateTime createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "teacherId", referencedColumnName = "teacherId")
+    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
 }

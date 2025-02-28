@@ -14,24 +14,26 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "Students")
+@Table(name = "SINHVIEN")
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "maSinhVien")
     Long studentId;
 
     @OneToOne
-    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    @JoinColumn(name = "maTaiKhoan", referencedColumnName = "maTaiKhoan")
     Account account;
 
     @ManyToOne
-    @JoinColumn(name = "classId", referencedColumnName = "classId")
+    @JoinColumn(name = "maLopSH", referencedColumnName = "maLopSH")
     Clazz clazz;
 
     @ManyToMany(mappedBy = "students")
     Set<Announcement> announcements = new HashSet<>();
 
+    @Column(name = "daXoa")
     boolean flagDelete;
 
 }
