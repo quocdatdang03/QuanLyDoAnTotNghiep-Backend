@@ -8,4 +8,5 @@ public class AppConstant {
     public static final String PROJECT_DEFAULT_SORT_BY = "projectName";
     public static final String DEFAULT_SORT_DIR = "asc";
     public static final String SCHOOLYEAR_DEFAULT_SORT_BY = "schoolYearName";
+    public static final String SEMESTER_DEFAULT_SORT_BY = "semesterName";
 }
