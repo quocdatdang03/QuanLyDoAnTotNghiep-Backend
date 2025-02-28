@@ -21,7 +21,7 @@ public class SchoolYear {
     @Column(name = "maNamHoc")
     Long schoolYearId;
 
-    @Column(name = "namHoc")
+    @Column(name = "namHoc", unique = true)
     String schoolYearName;
 
     @OneToMany(mappedBy = "schoolYear")

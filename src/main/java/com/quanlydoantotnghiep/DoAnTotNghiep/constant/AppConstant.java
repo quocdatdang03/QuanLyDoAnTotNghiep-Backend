@@ -7,4 +7,5 @@ public class AppConstant {
     public static final String STUDENT_DEFAULT_SORT_BY = "account.fullName";
     public static final String PROJECT_DEFAULT_SORT_BY = "projectName";
     public static final String DEFAULT_SORT_DIR = "asc";
+    public static final String SCHOOLYEAR_DEFAULT_SORT_BY = "schoolYearName";
 }

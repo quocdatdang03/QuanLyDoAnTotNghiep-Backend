@@ -6,10 +6,8 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.TeacherAccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.UpdateAccountClientRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.AccountRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.StudentRepository;
 import com.quanlydoantotnghiep.DoAnTotNghiep.security.jwt.JwtTokenProvider;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
