@@ -3,6 +3,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SchoolYearDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.schoolYear.SchoolYearRequest;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.schoolYear.SchoolYearResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.SchoolYearService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,15 @@ public class AdminSchoolYearController {
     private final SchoolYearService schoolYearService;
     private final AccountService accountService;
 
+
+    @GetMapping("/{schoolYearId}")
+    public ResponseEntity<SchoolYearResponse> getSchoolYearById(
+            @PathVariable("schoolYearId") Long schoolYearId
+    ) {
+
+        return ResponseEntity.ok(schoolYearService.getSchoolYearById(schoolYearId));
+    }
+
     @PostMapping
     public ResponseEntity<SchoolYearDto> createSchoolYear(
             @RequestHeader("Authorization") String jwtToken,
@@ -32,7 +42,7 @@ public class AdminSchoolYearController {
     @PutMapping("/{schoolYearId}")
     public ResponseEntity<SchoolYearDto> updateSchoolYear(
 
-            @RequestBody SchoolYearRequest schoolYearRequest,
+            @RequestBody SchoolYearRequest schoolYearRequest,   
             @PathVariable("schoolYearId") Long schoolYearId
     ) {
 
