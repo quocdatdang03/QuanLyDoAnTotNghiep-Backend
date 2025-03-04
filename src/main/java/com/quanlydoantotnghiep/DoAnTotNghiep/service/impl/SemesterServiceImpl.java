@@ -1,6 +1,7 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.service.impl;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ObjectResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.CreateSemesterRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.UpdateSemesterRequest;
@@ -10,11 +11,16 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.SchoolYearRepository;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.SemesterRepository;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.SemesterService;
+import com.quanlydoantotnghiep.DoAnTotNghiep.utils.AppUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,18 +34,37 @@ public class SemesterServiceImpl implements SemesterService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<SemesterDto> getAllSemesters() {
+    public ObjectResponse getAllSemesters(int pageNumber, int pageSize, String[] sortBy, String sortDir) {
 
-        // sort by schoolYear by desc then semester by desc
-        Sort sort = Sort.by("schoolYear."+AppConstant.SCHOOLYEAR_DEFAULT_SORT_BY,AppConstant.SEMESTER_DEFAULT_SORT_BY).descending();
+        // Sort by schoolYearName by DESC and semesterName by DEDC
+        Sort sort = Sort.by(sortBy);
+        if(sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()))
+            sort = sort.ascending();
+        else
+            sort = sort.descending();
 
-        List<Semester> semesters = semesterRepository.findByFlagDeleteIsFalse(sort);
+        // paginating
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize, sort);
 
-        return semesters.stream().map(
+        Page<Semester> semesterPage = semesterRepository.findByFlagDeleteIsFalse(pageable);
+
+        List<SemesterDto> semesterDtos = semesterPage.stream().map(
                 item -> modelMapper.map(item, SemesterDto.class)
         ).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(semesterPage, semesterDtos);
     }
 
+    @Override
+    public SemesterDto getSemesterById(Long semesterId) {
+
+        Semester semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+semesterId));
+
+        return modelMapper.map(semester, SemesterDto.class);
+    }
+
+    @Transactional
     @Override
     public SemesterDto createSemester(CreateSemesterRequest createSemesterRequest) {
 
@@ -62,6 +87,7 @@ public class SemesterServiceImpl implements SemesterService {
         return modelMapper.map(savedSemester, SemesterDto.class);
     }
 
+    @Transactional
     @Override
     public SemesterDto updateSemester(Long semesterId, UpdateSemesterRequest updateSemesterRequest) {
 
@@ -75,7 +101,7 @@ public class SemesterServiceImpl implements SemesterService {
         semester.setSchoolYear(schoolYear);
 
         // check semester is current -> update isCurrent of all other semesters to false
-        if(updateSemesterRequest.isCurrent())
+        if(updateSemesterRequest.isCurrent() && !semester.isCurrent())
         {
             semesterRepository.updateAllIsCurrentToFalse();
         }

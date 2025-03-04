@@ -1,6 +1,8 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.repository;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Semester;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +14,7 @@ import java.util.List;
 @Transactional
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
-    List<Semester> findByFlagDeleteIsFalse(Sort sort);
+    Page<Semester> findByFlagDeleteIsFalse(Pageable pageable);
 
     @Modifying
     @Query("UPDATE Semester s SET s.isCurrent=false")

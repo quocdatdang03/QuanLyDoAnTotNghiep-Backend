@@ -1,5 +1,6 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
+import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.CreateSemesterRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.UpdateSemesterRequest;
@@ -17,9 +18,23 @@ public class AdminSemesterController {
     private final SemesterService semesterService;
 
     @GetMapping
-    public ResponseEntity<?> getAllSemesters() {
+    public ResponseEntity<?> getAllSemesters(
+            @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(name = "sortDir", required = false, defaultValue = "desc") String sortDir
+    ) {
 
-        return ResponseEntity.ok(semesterService.getAllSemesters());
+        String[] sortBy = {"schoolYear."+AppConstant.SCHOOLYEAR_DEFAULT_SORT_BY, AppConstant.SEMESTER_DEFAULT_SORT_BY};
+
+        return ResponseEntity.ok(semesterService.getAllSemesters(pageNumber, pageSize, sortBy, sortDir));
+    }
+
+    @GetMapping("/{semesterId}")
+    public ResponseEntity<SemesterDto> getSemesterById(
+            @PathVariable("semesterId") Long semesterId
+    ) {
+
+        return ResponseEntity.ok(semesterService.getSemesterById(semesterId));
     }
 
 
