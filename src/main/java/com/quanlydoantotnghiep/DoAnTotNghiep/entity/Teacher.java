@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -36,15 +37,26 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     Set<ProgressReview> progressReviews;
 
-
     @OneToMany(mappedBy = "teacher")
-    Set<TeacherNotification> teacherNotifications;
+    Set<Notification> notifications;
 
     @OneToMany(mappedBy = "teacher")
     Set<Document> documents;
 
     @OneToMany(mappedBy = "teacher")
     Set<Stage> stages;
+
+    @OneToMany(mappedBy = "teacher")
+    Set<Project> projects;
+
+    // 1 GVHD có thể được đề xuất bởi nhiều sinh viên
+    @ManyToMany
+    @JoinTable(
+            name = "GIANGVIENHD_DEXUAT_SINHVIEN",
+            joinColumns = @JoinColumn(name = "maGiangVienHD"),
+            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
+    )
+    Set<Student> students = new HashSet<>();
 
     @Column(name = "daXoa")
     boolean flagDelete;

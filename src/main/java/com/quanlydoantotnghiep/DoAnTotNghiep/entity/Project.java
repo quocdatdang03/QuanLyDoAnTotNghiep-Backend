@@ -54,6 +54,10 @@ public class Project {
     @JoinColumn(name = "maSinhVien", referencedColumnName = "maSinhVien")
     Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
+    Teacher teacher;
+
     @Column(name = "daXoa")
     boolean flagDelete;
 }

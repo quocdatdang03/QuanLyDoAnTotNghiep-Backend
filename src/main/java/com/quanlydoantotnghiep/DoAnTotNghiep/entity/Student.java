@@ -30,8 +30,13 @@ public class Student {
     @JoinColumn(name = "maLopSH", referencedColumnName = "maLopSH")
     Clazz clazz;
 
+    // 1 sinh viên nhận được nhiều thông báo từ GVHD
     @ManyToMany(mappedBy = "students")
-    Set<Announcement> announcements = new HashSet<>();
+    Set<Notification> notifications = new HashSet<>();
+
+    // 1 sinh viên có thể đề xuất nhiều GVHD
+    @ManyToMany(mappedBy = "students")
+    Set<Teacher> teachers = new HashSet<>();
 
     @Column(name = "daXoa")
     boolean flagDelete;
