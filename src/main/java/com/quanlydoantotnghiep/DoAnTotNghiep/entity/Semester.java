@@ -30,11 +30,11 @@ public class Semester {
 
     @ManyToMany
     @JoinTable(
-            name = "HOCKY_TAIKHOAN",
+            name = "HOCKY_SINHVIEN",
             joinColumns = @JoinColumn(name = "maHocKy"),
-            inverseJoinColumns = @JoinColumn(name = "maTaiKhoan")
+            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
     )
-    Set<Account> accounts;
+    Set<Student> students;
 
     @Column(name = "laHocKyHienTai")
     boolean isCurrent;

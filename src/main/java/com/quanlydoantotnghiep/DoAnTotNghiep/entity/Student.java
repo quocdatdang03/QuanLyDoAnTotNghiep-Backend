@@ -38,6 +38,10 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     Set<Teacher> teachers = new HashSet<>();
 
+    // 1 sinh viên có thể có trong nhiều học kỳ đồ án
+    @ManyToMany(mappedBy = "students")
+    Set<Semester> semesters = new HashSet<>();
+
     @Column(name = "daXoa")
     boolean flagDelete;
 
