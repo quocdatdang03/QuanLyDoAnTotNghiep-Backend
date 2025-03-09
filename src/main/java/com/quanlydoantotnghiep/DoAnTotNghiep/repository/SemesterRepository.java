@@ -19,4 +19,7 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
     @Modifying
     @Query("UPDATE Semester s SET s.isCurrent=false")
     void updateAllIsCurrentToFalse();
+
+    // find current Semester
+    Semester findByIsCurrentIsTrue();
 }

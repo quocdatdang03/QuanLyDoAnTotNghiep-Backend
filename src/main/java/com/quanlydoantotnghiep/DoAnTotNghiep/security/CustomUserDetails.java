@@ -46,4 +46,9 @@ public class CustomUserDetails implements UserDetails {
 
         return account.isEnable();
     }
+
+    public Account getAccount() {
+
+        return this.account;
+    }
 }

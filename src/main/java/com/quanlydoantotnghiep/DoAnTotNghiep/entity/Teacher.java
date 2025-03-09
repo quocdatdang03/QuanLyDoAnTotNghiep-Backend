@@ -58,6 +58,9 @@ public class Teacher {
     )
     Set<Student> students = new HashSet<>();
 
+    @Column(name = "truongBoMon")
+    boolean isLeader;
+
     @Column(name = "daXoa")
     boolean flagDelete;
 

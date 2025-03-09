@@ -30,5 +30,6 @@ public class TeacherAccountRequest {
     Set<Long> roleIds;
     Long degreeId;
     Long facultyId;
+    boolean isLeader;
     boolean enable;
 }

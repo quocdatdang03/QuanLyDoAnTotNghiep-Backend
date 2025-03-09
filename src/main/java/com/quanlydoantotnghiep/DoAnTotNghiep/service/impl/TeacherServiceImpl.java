@@ -71,6 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = Teacher.builder()
                 .account(savedAccount)
                 .faculty(faculty)
+                .isLeader(request.isLeader())
                 .degree(degree).build();
 
         Teacher savedTeacher = teacherRepository.save(teacher);
@@ -84,6 +85,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacherAccountResponse.setFaculty(
                 modelMapper.map(savedTeacher.getFaculty(), FacultyDto.class)
         );
+        teacherAccountResponse.setLeader(savedTeacher.isLeader());
 
         return teacherAccountResponse;
     }

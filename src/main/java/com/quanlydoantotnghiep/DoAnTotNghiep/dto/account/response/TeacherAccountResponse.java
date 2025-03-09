@@ -28,6 +28,7 @@ public class TeacherAccountResponse {
     String address;
     String image;
     Set<RoleDto> roles;
+    boolean isLeader;
     boolean enable;
     DegreeDto degree;
     FacultyDto faculty;

@@ -1,5 +1,6 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.config;
 
+import com.quanlydoantotnghiep.DoAnTotNghiep.security.InstructorAuthorizationManager;
 import com.quanlydoantotnghiep.DoAnTotNghiep.security.jwt.JwtAuthenticationEntryPoint;
 import com.quanlydoantotnghiep.DoAnTotNghiep.security.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+    private final InstructorAuthorizationManager instructorAuthorizationManager;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -35,6 +37,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN");
+                    authorize.requestMatchers("/api/instructors/**").access(instructorAuthorizationManager); // Chỉ user có role GIANGVIEN và isLeader=true mới truy cập được endpoint này
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     //authorize.requestMatchers("/ws/**").permitAll(); // Cho phép WebSocket nhưng sẽ xác thực qua Interceptor
                     authorize.requestMatchers("/api/**").authenticated();
