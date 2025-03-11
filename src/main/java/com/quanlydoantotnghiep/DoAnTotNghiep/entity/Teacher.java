@@ -58,6 +58,10 @@ public class Teacher {
     )
     Set<Student> students = new HashSet<>();
 
+    // 1 GVHD có thể quản lý nhiều sinh viên
+    @OneToMany(mappedBy = "instructor")
+    Set<Student> managedStudents = new HashSet<>();
+
     @Column(name = "truongBoMon")
     boolean isLeader;
 

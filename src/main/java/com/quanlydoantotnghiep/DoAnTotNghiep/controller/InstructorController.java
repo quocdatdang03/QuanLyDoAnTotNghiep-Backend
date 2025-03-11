@@ -2,7 +2,6 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,8 @@ public class InstructorController {
     private final AccountService accountService;
     private final InstructorService instructorService;
 
-    @GetMapping("/students")
-    public ResponseEntity<?> getAllStudents(
+    @GetMapping("/students/no-instructor")
+    public ResponseEntity<?> getAllStudentsWithoutInstructor(
             @RequestHeader("Authorization") String jwtToken,
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
             @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
@@ -30,7 +29,7 @@ public class InstructorController {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(instructorService.getAllStudents(keyword, classId, accountDto, pageNumber, pageSize, sortBy, sortDir));
+        return ResponseEntity.ok(instructorService.getAllStudentsWithoutInstructor(keyword, classId, accountDto, pageNumber, pageSize, sortBy, sortDir));
     }
 
     @GetMapping("/classes")
@@ -41,6 +40,17 @@ public class InstructorController {
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
         return ResponseEntity.ok(instructorService.getAllClassesByFaculty(accountDto));
+    }
+
+    // get all instructors faculty
+    @GetMapping("/faculty")
+    public ResponseEntity<?> getAllInstructorsByFaculty(
+            @RequestHeader("Authorization") String jwtToken
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(instructorService.getAllTeachersByFaculty(accountDto));
     }
 
 

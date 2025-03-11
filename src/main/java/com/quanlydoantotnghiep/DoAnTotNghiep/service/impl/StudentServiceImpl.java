@@ -7,6 +7,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.StudentAccountR
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.RoleDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccountResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Clazz;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Role;
@@ -41,19 +42,40 @@ public class StudentServiceImpl implements StudentService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-//    @Override
-//    public StudentAccountResponse getStudentByStudentCode(String studentCode) {
-//
-//        Student student = studentRepository.findByAccount_Code(studentCode)
-//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given student code: "+studentCode));
-//
-//        Account account = accountRepository.findById(student.getAccount().getAccountId())
-//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+student.getAccount().getAccountId()));
-//
-//        // convert to StudentAccountResponse
-//        return getStudentAccountResponse(student, account);
-//
-//    }
+    @Override
+    public StudentDto getStudentByStudentCode(String studentCode) {
+
+        Student student = studentRepository.findByAccount_Code(studentCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given student code: "+studentCode));
+
+        Account account = accountRepository.findById(student.getAccount().getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+student.getAccount().getAccountId()));
+
+        // convert to StudentDto
+
+        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+        studentDto.setStudentCode(student.getAccount().getCode());
+        studentDto.setStudentId(student.getStudentId());
+        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+        studentDto.setSemesters(
+                student.getSemesters().stream().map(
+                        item -> modelMapper.map(item, SemesterDto.class)
+                ).collect(Collectors.toSet())
+        );
+        studentDto.setRecommendedTeachers(
+                student.getTeachers().stream().map((item) -> {
+
+                    return RecommendedTeacherDto.builder()
+                            .teacherId(item.getTeacherId())
+                            .teacherCode(item.getAccount().getCode())
+                            .teacherName(item.getAccount().getFullName())
+                            .build();
+                }).collect(Collectors.toList())
+        );
+
+        return studentDto;
+
+    }
 
     @Override
     public StudentAccountResponse createAccountStudent(StudentAccountRequest request) {

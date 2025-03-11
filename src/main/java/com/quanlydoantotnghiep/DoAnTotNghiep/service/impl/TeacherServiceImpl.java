@@ -89,4 +89,24 @@ public class TeacherServiceImpl implements TeacherService {
 
         return teacherAccountResponse;
     }
+
+    @Override
+    public TeacherAccountResponse getTeacherByTeacherCode(String teacherCode) {
+
+        Teacher teacher = teacherRepository.findByAccount_Code(teacherCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+teacherCode));
+
+        // convert to TeacherAccountResponse
+        TeacherAccountResponse teacherAccountResponse = modelMapper.map(teacher.getAccount(), TeacherAccountResponse.class);
+        teacherAccountResponse.setTeacherCode(teacher.getAccount().getCode());
+        teacherAccountResponse.setDegree(
+                modelMapper.map(teacher.getDegree(), DegreeDto.class)
+        );
+        teacherAccountResponse.setFaculty(
+                modelMapper.map(teacher.getFaculty(), FacultyDto.class)
+        );
+        teacherAccountResponse.setLeader(teacher.isLeader());
+
+        return teacherAccountResponse;
+    }
 }
