@@ -113,38 +113,8 @@ public class InstructorServiceImpl implements InstructorService {
 
         List<StudentDto> students = pageStudents.getContent().stream()
                 .map((student) -> {
-                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
-                    studentDto.setStudentCode(student.getAccount().getCode());
-                    studentDto.setStudentId(student.getStudentId());
-                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
-                    studentDto.setSemesters(
-                            student.getSemesters().stream().map(
-                                    item -> modelMapper.map(item, SemesterDto.class)
-                            ).collect(Collectors.toSet())
-                    );
 
-                    studentDto.setRecommendedTeachers(
-                            student.getTeachers().stream().map((item) -> {
-
-                                RecommendedTeacherDto recommendedTeacherDto = RecommendedTeacherDto.builder()
-                                        .teacherId(item.getTeacherId())
-                                        .teacherCode(item.getAccount().getCode())
-                                        .teacherName(item.getAccount().getFullName())
-                                        .build();
-
-                                return recommendedTeacherDto;
-                            }).collect(Collectors.toList())
-                    );
-
-                    TeacherAccountResponse teacherAccountResponse = modelMapper.map(student.getInstructor().getAccount(), TeacherAccountResponse.class);
-                    teacherAccountResponse.setTeacherCode(student.getInstructor().getAccount().getCode());
-                    teacherAccountResponse.setFaculty(modelMapper.map(student.getInstructor().getFaculty(), FacultyDto.class));
-                    teacherAccountResponse.setDegree(modelMapper.map(student.getInstructor().getDegree(), DegreeDto.class));
-                    teacherAccountResponse.setLeader(student.getInstructor().isLeader());
-
-                    studentDto.setInstructor(teacherAccountResponse);
-
-                    return studentDto;
+                    return convertToStudentDto(student);
                 }).collect(Collectors.toList());
 
         return AppUtils.createObjectResponse(pageStudents, students);
@@ -211,6 +181,76 @@ public class InstructorServiceImpl implements InstructorService {
         studentRepository.saveAll(students);
 
         return "Assigning instructor for students successfully!";
+    }
+
+    @Override
+    public StudentDto removeInstructorFromStudent(String studentCode, String instructorCode) {
+
+        Student student = studentRepository.findByAccount_Code(studentCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given code: "+studentCode));
+
+        Teacher teacher = teacherRepository.findByAccount_Code(instructorCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+instructorCode));
+
+        student.setInstructor(null);
+        Student savedStudent = studentRepository.save(student);
+
+        // convert to DTO:
+        return convertToStudentDto(savedStudent);
+    }
+
+    @Override
+    public StudentDto changeInstructorOfStudent(String studentCode, String instructorCode) {
+
+        Student student = studentRepository.findByAccount_Code(studentCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given code: "+studentCode));
+
+        Teacher teacher = teacherRepository.findByAccount_Code(instructorCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+instructorCode));
+
+        student.setInstructor(teacher);
+        Student savedStudent = studentRepository.save(student);
+
+        // convert to DTO:
+        return convertToStudentDto(savedStudent);
+    }
+
+    private StudentDto convertToStudentDto(Student student) {
+        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+        studentDto.setStudentCode(student.getAccount().getCode());
+        studentDto.setStudentId(student.getStudentId());
+        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+        studentDto.setSemesters(
+                student.getSemesters().stream().map(
+                        item -> modelMapper.map(item, SemesterDto.class)
+                ).collect(Collectors.toSet())
+        );
+
+        studentDto.setRecommendedTeachers(
+                student.getTeachers().stream().map((item) -> {
+
+                    RecommendedTeacherDto recommendedTeacherDto = RecommendedTeacherDto.builder()
+                            .teacherId(item.getTeacherId())
+                            .teacherCode(item.getAccount().getCode())
+                            .teacherName(item.getAccount().getFullName())
+                            .build();
+
+                    return recommendedTeacherDto;
+                }).collect(Collectors.toList())
+        );
+
+        if(student.getInstructor()!=null)
+        {
+            TeacherAccountResponse teacherAccountResponse = modelMapper.map(student.getInstructor().getAccount(), TeacherAccountResponse.class);
+            teacherAccountResponse.setTeacherCode(student.getInstructor().getAccount().getCode());
+            teacherAccountResponse.setFaculty(modelMapper.map(student.getInstructor().getFaculty(), FacultyDto.class));
+            teacherAccountResponse.setDegree(modelMapper.map(student.getInstructor().getDegree(), DegreeDto.class));
+            teacherAccountResponse.setLeader(student.getInstructor().isLeader());
+
+            studentDto.setInstructor(teacherAccountResponse);
+        }
+
+        return studentDto;
     }
 
 

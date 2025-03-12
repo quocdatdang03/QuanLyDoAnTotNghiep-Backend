@@ -2,6 +2,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.service;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ObjectResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 
@@ -18,6 +19,10 @@ public interface InstructorService {
     List<TeacherAccountResponse> getAllTeachersByFaculty(AccountDto accountDto);
 
     String assignInstructorForStudents(String teacherCode, List<String> studentCodeList);
+
+    StudentDto removeInstructorFromStudent(String studentCode, String instructorCode);
+
+    StudentDto changeInstructorOfStudent(String studentCode, String instructorCode);
 
 
 }

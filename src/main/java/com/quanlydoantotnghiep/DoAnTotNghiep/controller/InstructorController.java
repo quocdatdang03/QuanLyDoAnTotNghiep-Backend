@@ -3,6 +3,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.AssignInstructorRequest;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RemoveInstructorFromStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,25 @@ public class InstructorController {
                         assignInstructorRequest.getStudentCodes())
         );
     }
+
+    // Remove instructor from student:
+    @PatchMapping("/remove-instructor")
+    public ResponseEntity<?> removeInstructorFromStudent(
+            @RequestBody RemoveInstructorFromStudentRequest request
+    ) {
+
+        return ResponseEntity.ok(instructorService.removeInstructorFromStudent(request.getStudentCode(), request.getTeacherCode()));
+    }
+
+    // Change instructor of student:
+    @PatchMapping("/change-instructor")
+    public ResponseEntity<?> changeInstructorOfStudent(
+            @RequestBody RemoveInstructorFromStudentRequest request
+    ) {
+
+        return ResponseEntity.ok(instructorService.changeInstructorOfStudent(request.getStudentCode(), request.getTeacherCode()));
+    }
+
 
 
     private AccountDto getAccountDtoByJwtToken(String jwtToken) {
