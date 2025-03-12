@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByAccount_AccountId(Long accountId);
     Optional<Student> findByAccount_Code(String studentCode);
     Page<Student> findByClazzFacultyFacultyId(Long facultyId, Pageable pageable);
+    List<Student> findAllByAccount_CodeIn(List<String> studentCode);
 
     @Query("""
         SELECT s
@@ -67,6 +69,29 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             @Param("classId") Long classId,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT s FROM Student s
+            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                AND (:classId IS NULL OR s.clazz.classId = :classId)
+                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
+                AND (:semesterId IS NULL OR EXISTS (
+                            SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
+                        )
+                    )
+                AND s.instructor IS NOT NULL
+                AND (:instructorCode IS NULL OR s.instructor.account.code = :instructorCode)
+    """)
+    Page<Student> findAllStudentsHavingInstructor(
+            @Param("keyword") String keyword,
+            @Param("semesterId") Long semesterId,
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId,
+            @Param("instructorCode") String instructorCode,
+            Pageable pageable
+    );
+
 
 
 //    List<Student> findByTeamTeamId(Long teamId);

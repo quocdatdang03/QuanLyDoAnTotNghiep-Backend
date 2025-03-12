@@ -11,9 +11,13 @@ public interface InstructorService {
 
     ObjectResponse getAllStudentsWithoutInstructor(String keyword, Long classId, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir);
 
+    ObjectResponse getAllStudentsHavingInstructor(String keyword, Long classId, String instructorCode, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir);
+
     List<ClassDto> getAllClassesByFaculty(AccountDto accountDto);
 
     List<TeacherAccountResponse> getAllTeachersByFaculty(AccountDto accountDto);
+
+    String assignInstructorForStudents(String teacherCode, List<String> studentCodeList);
 
 
 }

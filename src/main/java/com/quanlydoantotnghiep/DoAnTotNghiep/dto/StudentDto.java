@@ -1,6 +1,8 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.dto;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.RoleDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.TeacherAccountDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
 import lombok.*;
@@ -32,5 +34,6 @@ public class StudentDto {
     ClassDto studentClass;
     Set<SemesterDto> semesters;
     List<RecommendedTeacherDto> recommendedTeachers;
+    TeacherAccountResponse instructor;
 
 }

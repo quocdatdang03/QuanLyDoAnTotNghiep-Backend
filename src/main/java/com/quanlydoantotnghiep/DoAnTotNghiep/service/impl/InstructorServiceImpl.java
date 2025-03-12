@@ -18,7 +18,9 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.repository.TeacherRepository;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.ClassService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.utils.AppUtils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -92,6 +94,63 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
+    public ObjectResponse getAllStudentsHavingInstructor(String keyword, Long classId, String instructorCode, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        Account account = accountRepository.findById(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+accountDto.getAccountId()));
+
+        // Get faculty id
+        Long facultyId = account.getTeacher().getFaculty().getFacultyId();
+
+        // get current semester
+        Semester semester = semesterRepository.findByIsCurrentIsTrue();
+
+        // create pageable
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        Page<Student> pageStudents = studentRepository
+                .findAllStudentsHavingInstructor(keyword, semester.getSemesterId(), facultyId, classId, instructorCode, pageable);
+
+        List<StudentDto> students = pageStudents.getContent().stream()
+                .map((student) -> {
+                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+                    studentDto.setStudentCode(student.getAccount().getCode());
+                    studentDto.setStudentId(student.getStudentId());
+                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+                    studentDto.setSemesters(
+                            student.getSemesters().stream().map(
+                                    item -> modelMapper.map(item, SemesterDto.class)
+                            ).collect(Collectors.toSet())
+                    );
+
+                    studentDto.setRecommendedTeachers(
+                            student.getTeachers().stream().map((item) -> {
+
+                                RecommendedTeacherDto recommendedTeacherDto = RecommendedTeacherDto.builder()
+                                        .teacherId(item.getTeacherId())
+                                        .teacherCode(item.getAccount().getCode())
+                                        .teacherName(item.getAccount().getFullName())
+                                        .build();
+
+                                return recommendedTeacherDto;
+                            }).collect(Collectors.toList())
+                    );
+
+                    TeacherAccountResponse teacherAccountResponse = modelMapper.map(student.getInstructor().getAccount(), TeacherAccountResponse.class);
+                    teacherAccountResponse.setTeacherCode(student.getInstructor().getAccount().getCode());
+                    teacherAccountResponse.setFaculty(modelMapper.map(student.getInstructor().getFaculty(), FacultyDto.class));
+                    teacherAccountResponse.setDegree(modelMapper.map(student.getInstructor().getDegree(), DegreeDto.class));
+                    teacherAccountResponse.setLeader(student.getInstructor().isLeader());
+
+                    studentDto.setInstructor(teacherAccountResponse);
+
+                    return studentDto;
+                }).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(pageStudents, students);
+    }
+
+    @Override
     public List<com.quanlydoantotnghiep.DoAnTotNghiep.dto.ClassDto> getAllClassesByFaculty(AccountDto accountDto) {
 
         Account account = accountRepository.findById(accountDto.getAccountId())
@@ -132,6 +191,26 @@ public class InstructorServiceImpl implements InstructorService {
                     return teacherAccountResponse;
                 }
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public String assignInstructorForStudents(String teacherCode, List<String> studentCodeList) {
+
+        Teacher teacher = teacherRepository.findByAccount_Code(teacherCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code:"+teacherCode));
+
+        List<Student> students = studentRepository.findAllByAccount_CodeIn(studentCodeList);
+
+        if(students.size() <= 0)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student list is empty");
+
+        students.forEach((item) -> {
+            item.setInstructor(teacher);
+        });
+
+        studentRepository.saveAll(students);
+
+        return "Assigning instructor for students successfully!";
     }
 
 
