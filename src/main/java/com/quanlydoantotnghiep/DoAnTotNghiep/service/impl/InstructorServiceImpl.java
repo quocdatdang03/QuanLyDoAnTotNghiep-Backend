@@ -121,6 +121,33 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
+    public ObjectResponse getAllStudentsOfInstructor(AccountDto accountDto, String keyword, Long semesterId, Long classId, String instructorCode, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        Account account = accountRepository.findById(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+accountDto.getAccountId()));
+
+        String teacherCode = account.getTeacher().getAccount().getCode();
+
+        Semester currentSemester = null;
+        if (semesterId==null)
+            currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        // create pageable
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        Page<Student> pageStudents = studentRepository
+                .findAllStudentsByInstructor(keyword, semesterId==null ? currentSemester.getSemesterId() : semesterId, classId, teacherCode, pageable);
+
+        List<StudentDto> students = pageStudents.getContent().stream()
+                .map((student) -> {
+
+                    return convertToStudentDto(student);
+                }).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(pageStudents, students);
+    }
+
+    @Override
     public TeacherAccountResponse getInstructorByStudentCode(String studentCode) {
 
         Student student = studentRepository.findByAccount_Code(studentCode)

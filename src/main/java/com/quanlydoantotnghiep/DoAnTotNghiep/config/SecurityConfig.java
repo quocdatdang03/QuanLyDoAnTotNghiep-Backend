@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN");
                     authorize.requestMatchers("/api/student/**").hasAuthority("SINHVIEN");
-                    authorize.requestMatchers("/api/instructors/**").access(instructorAuthorizationManager); // Chỉ user có role GIANGVIEN và isLeader=true mới truy cập được endpoint này
+                    authorize.requestMatchers("/api/instructor-leader/**").access(instructorAuthorizationManager); // Chỉ user có role GIANGVIEN và isLeader=true mới truy cập được endpoint này
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     //authorize.requestMatchers("/ws/**").permitAll(); // Cho phép WebSocket nhưng sẽ xác thực qua Interceptor
                     authorize.requestMatchers("/api/**").authenticated();
