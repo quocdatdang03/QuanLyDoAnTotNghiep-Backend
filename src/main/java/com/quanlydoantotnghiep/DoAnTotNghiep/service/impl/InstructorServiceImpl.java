@@ -121,6 +121,31 @@ public class InstructorServiceImpl implements InstructorService {
     }
 
     @Override
+    public TeacherAccountResponse getInstructorByStudentCode(String studentCode) {
+
+        Student student = studentRepository.findByAccount_Code(studentCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given code: "+studentCode));
+
+        Teacher instructor = student.getInstructor();
+
+        if(instructor==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't have instructor");
+
+        // convert to TeacherAccountResponse:
+        TeacherAccountResponse teacherAccountResponse = modelMapper.map(instructor.getAccount(), TeacherAccountResponse.class);
+        teacherAccountResponse.setTeacherCode(instructor.getAccount().getCode());
+        teacherAccountResponse.setDegree(
+                modelMapper.map(instructor.getDegree(), DegreeDto.class)
+        );
+        teacherAccountResponse.setFaculty(
+                modelMapper.map(instructor.getFaculty(), FacultyDto.class)
+        );
+        teacherAccountResponse.setLeader(instructor.isLeader());
+
+        return teacherAccountResponse;
+    }
+
+    @Override
     public List<com.quanlydoantotnghiep.DoAnTotNghiep.dto.ClassDto> getAllClassesByFaculty(AccountDto accountDto) {
 
         Account account = accountRepository.findById(accountDto.getAccountId())

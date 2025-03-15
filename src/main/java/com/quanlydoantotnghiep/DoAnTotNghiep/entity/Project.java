@@ -33,9 +33,6 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProjectFile> projectFiles = new ArrayList<>();
 
-    @Column(name = "hinhAnhDeTai", columnDefinition = "text", nullable = false)
-    String projectImg;
-
     @ManyToOne
     @JoinColumn(name = "maTrangThaiDeTai", referencedColumnName = "maTrangThaiDeTai")
     ProjectStatus projectStatus;

@@ -17,8 +17,11 @@ public class ProjectFile {
     @Column(name = "maTaiLieuDeTai")
     Long projectFileId;
 
-    @Column(name = "duongDanTaiLieuDeTai")
+    @Column(name = "tenTaiLieu", nullable = false)
     String nameFile;
+
+    @Column(name = "duongDanTaiLieu", nullable = false)
+    String pathFile;
 
     @ManyToOne
     @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")

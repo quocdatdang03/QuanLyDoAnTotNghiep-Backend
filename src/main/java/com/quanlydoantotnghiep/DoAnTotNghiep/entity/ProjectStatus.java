@@ -18,13 +18,18 @@ import java.util.List;
 public class ProjectStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "maTrangThaiDeTai")
     Long projectStatusId;
 
     @Column(name = "tenTrangThaiDeTai")
     String projectStatusName;
 
+    @Column(name = "moTaTrangThai", columnDefinition = "TEXT")
+    String description;
+
     @OneToMany(mappedBy = "projectStatus")
     List<Project> projects;
+
+    @Column(name = "daXoa")
+    boolean flagDelete;
 }
