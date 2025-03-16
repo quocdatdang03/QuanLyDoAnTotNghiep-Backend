@@ -10,6 +10,7 @@ import java.util.List;
 public interface SemesterService {
 
     ObjectResponse getAllSemesters(int pageNumber, int pageSize, String[] sortBy, String sortDir);
+    List<SemesterDto> getAllSemesters();
     SemesterDto getSemesterById(Long semesterId);
     SemesterDto createSemester(CreateSemesterRequest createSemesterRequest);
     SemesterDto updateSemester(Long semesterId, UpdateSemesterRequest updateSemesterRequest);

@@ -47,6 +47,10 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     Set<Semester> semesters = new HashSet<>();
 
+    // 1 sinh viên chỉ có duy nhất 1 project
+    @OneToOne(mappedBy = "student")
+    Project project;
+
     @Column(name = "daXoa")
     boolean flagDelete;
 

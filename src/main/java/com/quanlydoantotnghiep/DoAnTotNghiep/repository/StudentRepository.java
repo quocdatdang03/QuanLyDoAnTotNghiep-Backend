@@ -101,12 +101,18 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                             SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
                         )
                     )
+                AND (
+                    :havingProject IS NULL OR 
+                        (:havingProject = true AND s.project IS NOT NULL)
+                        OR (:havingProject = false AND s.project IS NULL)
+                )
                 AND  s.instructor.account.code = :teacherCode
     """)
     Page<Student> findAllStudentsByInstructor(
             @Param("keyword") String keyword,
             @Param("semesterId") Long semesterId,
             @Param("classId") Long classId,
+            @Param("havingProject") Boolean havingProject,
             @Param("teacherCode") String teacherCode,
             Pageable pageable
     );

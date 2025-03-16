@@ -56,6 +56,16 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     @Override
+    public List<SemesterDto> getAllSemesters() {
+
+        List<Semester> semesters = semesterRepository.findByFlagDeleteIsFalse();
+
+        return semesters.stream().map(
+                item -> modelMapper.map(item, SemesterDto.class)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
     public SemesterDto getSemesterById(Long semesterId) {
 
         Semester semester = semesterRepository.findById(semesterId)

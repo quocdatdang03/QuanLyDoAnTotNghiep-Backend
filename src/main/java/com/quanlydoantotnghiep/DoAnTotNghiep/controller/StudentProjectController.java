@@ -3,9 +3,8 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.request.CreateProjectRequest;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
-import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
+import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorLeaderService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class StudentProjectController {
 
     private final ProjectService projectService;
-    private final InstructorService instructorService;
+    private final InstructorLeaderService instructorService;
     private final AccountService accountService;
 
     // get project by studentCode

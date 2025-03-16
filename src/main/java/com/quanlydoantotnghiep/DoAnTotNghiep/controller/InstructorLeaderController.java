@@ -5,7 +5,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.AssignInstructorRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RemoveInstructorFromStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
-import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
+import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorLeaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class InstructorLeaderController {
 
     private final AccountService accountService;
-    private final InstructorService instructorService;
+    private final InstructorLeaderService instructorLeaderService;
 
     @GetMapping("/students/no-instructor")
     public ResponseEntity<?> getAllStudentsWithoutInstructor(
@@ -31,7 +31,7 @@ public class InstructorLeaderController {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(instructorService.getAllStudentsWithoutInstructor(keyword, classId, accountDto, pageNumber, pageSize, sortBy, sortDir));
+        return ResponseEntity.ok(instructorLeaderService.getAllStudentsWithoutInstructor(keyword, classId, accountDto, pageNumber, pageSize, sortBy, sortDir));
     }
 
     @GetMapping("/students/having-instructor")
@@ -48,7 +48,7 @@ public class InstructorLeaderController {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(instructorService.getAllStudentsHavingInstructor(keyword, classId, instructorCode, accountDto, pageNumber, pageSize, sortBy, sortDir));
+        return ResponseEntity.ok(instructorLeaderService.getAllStudentsHavingInstructor(keyword, classId, instructorCode, accountDto, pageNumber, pageSize, sortBy, sortDir));
     }
 
     @GetMapping("/classes")
@@ -58,7 +58,7 @@ public class InstructorLeaderController {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(instructorService.getAllClassesByFaculty(accountDto));
+        return ResponseEntity.ok(instructorLeaderService.getAllClassesByFaculty(accountDto));
     }
 
     // get all instructors faculty
@@ -69,7 +69,7 @@ public class InstructorLeaderController {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
 
-        return ResponseEntity.ok(instructorService.getAllTeachersByFaculty(accountDto));
+        return ResponseEntity.ok(instructorLeaderService.getAllTeachersByFaculty(accountDto));
     }
 
     // Assign Instructors for students
@@ -79,7 +79,7 @@ public class InstructorLeaderController {
             ) {
 
         return ResponseEntity.ok(
-                instructorService.assignInstructorForStudents(
+                instructorLeaderService.assignInstructorForStudents(
                         assignInstructorRequest.getInstructorCode(),
                         assignInstructorRequest.getStudentCodes())
         );
@@ -91,7 +91,7 @@ public class InstructorLeaderController {
             @RequestBody RemoveInstructorFromStudentRequest request
     ) {
 
-        return ResponseEntity.ok(instructorService.removeInstructorFromStudent(request.getStudentCode(), request.getTeacherCode()));
+        return ResponseEntity.ok(instructorLeaderService.removeInstructorFromStudent(request.getStudentCode(), request.getTeacherCode()));
     }
 
     // Change instructor of student:
@@ -100,7 +100,7 @@ public class InstructorLeaderController {
             @RequestBody RemoveInstructorFromStudentRequest request
     ) {
 
-        return ResponseEntity.ok(instructorService.changeInstructorOfStudent(request.getStudentCode(), request.getTeacherCode()));
+        return ResponseEntity.ok(instructorLeaderService.changeInstructorOfStudent(request.getStudentCode(), request.getTeacherCode()));
     }
 
 

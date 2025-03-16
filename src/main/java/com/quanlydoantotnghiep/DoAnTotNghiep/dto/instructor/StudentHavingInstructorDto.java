@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StudentDto {
+public class StudentHavingInstructorDto {
 
     Long accountId;
     String studentCode;
@@ -34,5 +34,5 @@ public class StudentDto {
     Set<SemesterDto> semesters;
     List<RecommendedTeacherDto> recommendedTeachers;
     TeacherAccountResponse instructor;
-
+    StudentProjectDto project;
 }

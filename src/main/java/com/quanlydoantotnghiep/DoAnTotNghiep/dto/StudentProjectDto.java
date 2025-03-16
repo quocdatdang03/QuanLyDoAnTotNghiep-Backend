@@ -1,12 +1,11 @@
-package com.quanlydoantotnghiep.DoAnTotNghiep.dto.project;
+package com.quanlydoantotnghiep.DoAnTotNghiep.dto;
 
-
-import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectFileDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectStatusDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -15,13 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProjectDto {
+public class StudentProjectDto {
 
     Long projectId;
     String projectName;
     String projectContent;
     List<ProjectFileDto> projectFiles;
     ProjectStatusDto projectStatus;
-    SemesterDto semester;
-    StudentDto student;
+    LocalDateTime createdAt;
 }
+
