@@ -66,6 +66,14 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     @Override
+    public SemesterDto getCurrentSemester() {
+
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        return modelMapper.map(currentSemester, SemesterDto.class);
+    }
+
+    @Override
     public SemesterDto getSemesterById(Long semesterId) {
 
         Semester semester = semesterRepository.findById(semesterId)
