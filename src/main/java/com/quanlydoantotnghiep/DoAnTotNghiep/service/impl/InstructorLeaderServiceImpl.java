@@ -6,10 +6,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Semester;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Teacher;
+import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.AccountRepository;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.SemesterRepository;
@@ -232,6 +229,11 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
 
         Teacher teacher = teacherRepository.findByAccount_Code(instructorCode)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+instructorCode));
+
+        // check if student have already registered project -> set instructor of this project = this teacher
+        if(student.getProject()!=null) {
+            student.getProject().setTeacher(teacher);
+        }
 
         student.setInstructor(teacher);
         Student savedStudent = studentRepository.save(student);
