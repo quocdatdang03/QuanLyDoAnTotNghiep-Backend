@@ -104,16 +104,21 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
 
+        ProjectStatus projectStatus = projectStatusRepository.findById(1L)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project status is not exists with given id: "+1));
 
         if(!account.getStudent().getStudentId().equals(project.getStudent().getStudentId()))
             throw new ApiException(HttpStatus.BAD_REQUEST, "Project is not valid!");
 
-        // Only project with status id: 1 is accepted
-        if(project.getProjectStatus().getProjectStatusId() != 1)
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ xét duyệt) is accepted for using function updateProject");
+        // Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted
+        if(project.getProjectStatus().getProjectStatusId() != 1 && project.getProjectStatus().getProjectStatusId() != 4)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted for using function updateProject");
 
         project.setProjectName(updateProjectRequest.getProjectName());
         project.setProjectContent(updateProjectRequest.getProjectContent());
+
+        // when update project -> set project status = 1 (Chờ duyệt)
+        project.setProjectStatus(projectStatus);
 
         // Delete all old projectFiles before add new
         project.getProjectFiles().clear();

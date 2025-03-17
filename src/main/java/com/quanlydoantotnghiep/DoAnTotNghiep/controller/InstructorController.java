@@ -65,7 +65,23 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.getAllProjectsManagedByInstructor(accountDto, keyword, semesterId, classId, pageNumber, pageSize, sortBy, sortDir));
     }
 
-    @GetMapping("/projects/{studentCode}")
+    @PatchMapping("/projects/{projectId}/approve")
+    public ResponseEntity<?> approveProject(
+            @PathVariable(name = "projectId") Long projectId
+    ) {
+
+        return ResponseEntity.ok(instructorService.approveProject(projectId));
+    }
+
+    @PatchMapping("/projects/{projectId}/decline")
+    public ResponseEntity<?> declineProject(
+            @PathVariable(name = "projectId") Long projectId
+    ) {
+
+        return ResponseEntity.ok(instructorService.declineProject(projectId));
+    }
+
+    @GetMapping("/projects/student/{studentCode}")
     public ResponseEntity<?> getProjectByStudentCode(
         @PathVariable("studentCode") String studentCode
     ) {

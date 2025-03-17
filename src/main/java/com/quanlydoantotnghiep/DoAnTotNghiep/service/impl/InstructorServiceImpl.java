@@ -7,15 +7,9 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccount
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Project;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Semester;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
+import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.AccountRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.ProjectRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.SemesterRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.StudentRepository;
+import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.ClassService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.utils.AppUtils;
@@ -27,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +32,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final SemesterRepository semesterRepository;
     private final StudentRepository studentRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectStatusRepository projectStatusRepository;
     private final ModelMapper modelMapper;
 
 
@@ -94,6 +90,38 @@ public class InstructorServiceImpl implements InstructorService {
                 }).collect(Collectors.toList());
 
         return AppUtils.createObjectResponse(pageProject, projectDtos);
+    }
+
+    @Override
+    public ProjectDto approveProject(Long projectId) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        ProjectStatus projectStatus = projectStatusRepository.findById(2L)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project status is not exists with given id: "+2));
+
+        project.setProjectStatus(projectStatus);
+
+        Project savedProject = projectRepository.save(project);
+
+        return convertToProjectDto(savedProject, savedProject.getStudent());
+    }
+
+    @Override
+    public ProjectDto declineProject(Long projectId) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        ProjectStatus projectStatus = projectStatusRepository.findById(4L)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project status is not exists with given id: "+4));
+
+        project.setProjectStatus(projectStatus);
+
+        Project savedProject = projectRepository.save(project);
+
+        return convertToProjectDto(savedProject, savedProject.getStudent());
     }
 
     private ProjectDto convertToProjectDto(Project project, Student student) {
