@@ -1,8 +1,11 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.service.impl;
 
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.DegreeDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.FacultyDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectDto;
@@ -184,6 +187,17 @@ public class ProjectServiceImpl implements ProjectService {
                     return recommendedTeacherDto;
                 }).collect(Collectors.toList())
         );
+
+        if(student.getInstructor()!=null)
+        {
+            TeacherAccountResponse teacherAccountResponse = modelMapper.map(student.getInstructor().getAccount(), TeacherAccountResponse.class);
+            teacherAccountResponse.setTeacherCode(student.getInstructor().getAccount().getCode());
+            teacherAccountResponse.setFaculty(modelMapper.map(student.getInstructor().getFaculty(), FacultyDto.class));
+            teacherAccountResponse.setDegree(modelMapper.map(student.getInstructor().getDegree(), DegreeDto.class));
+            teacherAccountResponse.setLeader(student.getInstructor().isLeader());
+
+            studentDto.setInstructor(teacherAccountResponse);
+        }
 
         projectDto.setStudent(studentDto);
 

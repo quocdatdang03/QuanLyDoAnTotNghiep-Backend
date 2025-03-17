@@ -7,6 +7,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -24,4 +25,5 @@ public class ProjectDto {
     ProjectStatusDto projectStatus;
     SemesterDto semester;
     StudentDto student;
+    LocalDateTime createdAt;
 }
