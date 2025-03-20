@@ -31,6 +31,9 @@ public class Stage {
     @Column(name = "noiDungGiaiDoan", columnDefinition = "text", nullable = false)
     String stageContent;
 
+    @Column(name = "thuTuGiaiDoan", nullable = false)
+    Integer stageOrder;
+
     @Column(name = "thoiGianBatDau")
     LocalDateTime startDate;
 
