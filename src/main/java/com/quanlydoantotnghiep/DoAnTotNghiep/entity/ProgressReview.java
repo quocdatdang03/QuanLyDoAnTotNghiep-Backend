@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,9 +33,6 @@ public class ProgressReview {
     @Column(name = "trangThaiDanhGia")
     boolean isApproved;
 
-    @Column(name = "ngayGui")
-    LocalDateTime createdDate;
-
     @ManyToOne
     @JoinColumn(name="maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
@@ -45,4 +44,26 @@ public class ProgressReview {
     @ManyToOne
     @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao")
     ProgressReport progressReport;
+
+    @OneToMany(mappedBy = "progressReview", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProgressReviewFile> progressReviewFiles = new ArrayList<>();
+
+    @Column(name = "ngayTao")
+    LocalDateTime createdAt;
+
+    @Column(name = "ngayCapNhat")
+    LocalDateTime updatedAt;
+
+    @Column(name = "daXoa")
+    boolean flagDelete;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -1,22 +1,23 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "TAILIEUBAOCAO")
-public class ProgressReportFile {
+@Table(name = "TAILIEUGIAIDOAN")
+public class StageFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "maTaiLieuBaoCao")
-    Long progressReportFileId;
+    @Column(name = "maTaiLieuDanhGia")
+    Long stageFileId;
 
     @Column(name = "tenTaiLieu", nullable = false)
     String nameFile;
@@ -25,6 +26,6 @@ public class ProgressReportFile {
     String pathFile;
 
     @ManyToOne
-    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao")
-    ProgressReport progressReport;
+    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
+    Stage stage;
 }

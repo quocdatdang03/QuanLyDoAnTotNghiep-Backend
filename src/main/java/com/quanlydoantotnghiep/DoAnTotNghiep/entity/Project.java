@@ -56,6 +56,10 @@ public class Project {
     @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
     Teacher teacher;
 
+    // 1 project thì có nhiều stage, (quan hệ @ManyToMany được thể hiện qua table ProjectStage)
+    @OneToMany(mappedBy = "project")
+    List<ProjectStage> projectStages;
+
     @Column(name = "ngayTao", updatable = false)
     LocalDateTime createdAt;
 

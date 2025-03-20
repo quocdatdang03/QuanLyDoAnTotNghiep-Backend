@@ -34,9 +34,6 @@ public class ProgressReport {
     @Column(name = "trangThaiXetDuyet")
     boolean isApproved;
 
-    @Column(name = "thoiGianGui")
-    LocalDateTime createdDate;
-
     @OneToMany(mappedBy = "progressReport", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProgressReportFile> progressReportFiles = new ArrayList<>();
 
@@ -47,8 +44,27 @@ public class ProgressReport {
     @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
     Project project;
 
-    @ManyToOne
-    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
-    Stage stage;
+//    @ManyToOne
+//    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
+//    Stage stage;
+
+    @Column(name = "ngayTao")
+    LocalDateTime createdAt;
+
+    @Column(name = "ngayCapNhat")
+    LocalDateTime updatedAt;
+
+    @Column(name = "daXoa")
+    boolean flagDelete;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }
