@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -248,6 +249,44 @@ public class StageServiceImpl implements StageService {
         return stageStatuses.stream().map(
                 (item) -> modelMapper.map(item, StageStatusDto.class)
         ).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public List<StageDto> updateStageOrder(AccountDto accountDto, List<Long> newStageIds) {
+
+        Account account = accountRepository.findById(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+accountDto.getAccountId()));
+
+        // get current semester :
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        // Sort by stageOrder by ascending:
+        Sort sort = Sort.by("stageOrder").ascending();
+
+        // get list stage of teacher:
+        List<Stage> stages = stageRepository.findAllStagesByTeacherAndSemester(account.getTeacher().getTeacherId(), currentSemester.getSemesterId(), sort);
+
+        if(newStageIds.size() != stages.size())
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error when update stage order");
+
+        // update new stage order for stages:
+        List<StageDto> updatedStages = new ArrayList<>();
+
+        for(int i = 0; i < newStageIds.size(); i++) {
+
+            int index = i;
+            Stage stage = stageRepository.findById(newStageIds.get(index))
+                    .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Stage is not exists with given id: "+newStageIds.get(index)));
+
+            stage.setStageOrder(index+1);
+
+            Stage savedStage = stageRepository.save(stage);
+
+            updatedStages.add(convertToStageDto(savedStage));
+        }
+
+        return updatedStages;
     }
 
     private StageDto convertToStageDto(Stage item) {

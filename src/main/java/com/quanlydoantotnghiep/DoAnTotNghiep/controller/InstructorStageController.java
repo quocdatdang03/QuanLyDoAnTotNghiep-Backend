@@ -3,6 +3,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.request.CreateStageRequest;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.request.UpdateStageOrderRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.StageService;
 import lombok.RequiredArgsConstructor;
@@ -94,6 +95,17 @@ public class InstructorStageController {
     ) {
 
         return ResponseEntity.ok(stageService.updateStageStatus(stageId, stageStatusId));
+    }
+
+    @PatchMapping("/stageOrder")
+    public ResponseEntity<?> updateStageOrder(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestBody UpdateStageOrderRequest updateStageOrderRequest
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(stageService.updateStageOrder(accountDto, updateStageOrderRequest.getNewStageIds()));
     }
 
     private AccountDto getAccountDtoByJwtToken(String jwtToken) {

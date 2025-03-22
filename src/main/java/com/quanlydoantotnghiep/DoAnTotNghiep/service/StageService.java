@@ -17,4 +17,5 @@ public interface StageService {
     String deleteStageFileById(Long stageFileId);
     StageDto updateStageStatus(Long stageId, Long stageStatusId);
     List<StageStatusDto> getAllStageStatuses();
+    List<StageDto> updateStageOrder(AccountDto accountDto, List<Long> newStageIds);
 }
