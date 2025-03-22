@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @Entity
 @Table(name = "GIAIDOAN")
 public class Stage {
@@ -41,8 +42,13 @@ public class Stage {
     LocalDateTime endDate;
 
     // 1 Stage có thể có trong nhiều project, (quan hệ @ManyToMany được thể hiện qua table ProjectStage)
-    @OneToMany(mappedBy = "stage")
+    @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProjectStage> projectStages;
+
+    // Đây là default stageStatus chung cho các project
+    @ManyToOne
+    @JoinColumn(name = "maTrangThaiGiaiDoan", referencedColumnName = "maTrangThaiGiaiDoan")
+    StageStatus stageStatus;
 
     @ManyToOne
     @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
@@ -54,6 +60,7 @@ public class Stage {
 
     @Column(name = "daXoa")
     boolean flagDelete;
+
 
     // 1 Stage có nhiều Stage File
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)

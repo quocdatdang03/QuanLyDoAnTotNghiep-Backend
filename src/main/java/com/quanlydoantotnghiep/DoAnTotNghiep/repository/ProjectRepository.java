@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
@@ -31,6 +32,15 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             @Param("classId") Long classId,
             @Param("instructorCode") String instructorCode,
             Pageable pageable
+    );
+
+    @Query("""
+        SELECT p FROM Project p
+            WHERE p.teacher.account.code = :teacherCode AND p.semester.semesterId = :semesterId
+    """)
+    List<Project> findAllProjectsByTeacherAndSemester(
+            @Param("teacherCode") String teacherCode,
+            @Param("semesterId") Long semesterId
     );
 
 //    Page<Project> findByTeamTeacherTeacherId(Long teacherId, Pageable pageable);
