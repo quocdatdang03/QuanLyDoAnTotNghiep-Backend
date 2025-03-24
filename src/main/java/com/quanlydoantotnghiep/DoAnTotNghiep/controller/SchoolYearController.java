@@ -17,14 +17,21 @@ public class SchoolYearController {
 
     private final SchoolYearService schoolYearService;
 
+
     @GetMapping
-    public ResponseEntity<?> getAllSchoolYear(
+    public ResponseEntity<?> getAllSchoolYear() {
+
+        return ResponseEntity.ok(schoolYearService.getAllSchoolYears());
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<?> getAllSchoolYearsByPagination(
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
             @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(name = "sortBy", required = false, defaultValue = AppConstant.SCHOOLYEAR_DEFAULT_SORT_BY) String sortBy,
             @RequestParam(name = "sortDir", required = false, defaultValue = "desc") String sortDir
     ) {
 
-        return ResponseEntity.ok(schoolYearService.getAllSchoolYears(pageNumber, pageSize, sortBy, sortDir));
+        return ResponseEntity.ok(schoolYearService.getAllSchoolYearsByPagination(pageNumber, pageSize, sortBy, sortDir));
     }
 }

@@ -10,5 +10,8 @@ import java.util.List;
 
 public interface SchoolYearRepository extends JpaRepository<SchoolYear, Long> {
 
+    List<SchoolYear> findByFlagDeleteIsFalse(Sort sort);
     Page<SchoolYear> findByFlagDeleteIsFalse(Pageable pageable);
+    boolean existsBySchoolYearName(String schoolYearName);
+    SchoolYear findBySchoolYearName(String schoolYearName);
 }

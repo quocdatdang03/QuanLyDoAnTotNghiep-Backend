@@ -42,40 +42,40 @@ public class StudentServiceImpl implements StudentService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    @Override
-    public StudentDto getStudentByStudentCode(String studentCode) {
-
-        Student student = studentRepository.findByAccount_Code(studentCode)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given student code: "+studentCode));
-
-        Account account = accountRepository.findById(student.getAccount().getAccountId())
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+student.getAccount().getAccountId()));
-
-        // convert to StudentDto
-
-        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
-        studentDto.setStudentCode(student.getAccount().getCode());
-        studentDto.setStudentId(student.getStudentId());
-        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
-        studentDto.setSemesters(
-                student.getSemesters().stream().map(
-                        item -> modelMapper.map(item, SemesterDto.class)
-                ).collect(Collectors.toSet())
-        );
-        studentDto.setRecommendedTeachers(
-                student.getTeachers().stream().map((item) -> {
-
-                    return RecommendedTeacherDto.builder()
-                            .teacherId(item.getTeacherId())
-                            .teacherCode(item.getAccount().getCode())
-                            .teacherName(item.getAccount().getFullName())
-                            .build();
-                }).collect(Collectors.toList())
-        );
-
-        return studentDto;
-
-    }
+//    @Override
+//    public StudentDto getStudentByStudentCode(String studentCode) {
+//
+//        Student student = studentRepository.findByAccount_Code(studentCode)
+//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given student code: "+studentCode));
+//
+//        Account account = accountRepository.findById(student.getAccount().getAccountId())
+//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+student.getAccount().getAccountId()));
+//
+//        // convert to StudentDto
+//
+//        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+//        studentDto.setStudentCode(student.getAccount().getCode());
+//        studentDto.setStudentId(student.getStudentId());
+//        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+//        studentDto.setSemesters(
+//                student.getSemesters().stream().map(
+//                        item -> modelMapper.map(item, SemesterDto.class)
+//                ).collect(Collectors.toSet())
+//        );
+//        studentDto.setRecommendedTeachers(
+//                student.getTeachers().stream().map((item) -> {
+//
+//                    return RecommendedTeacherDto.builder()
+//                            .teacherId(item.getTeacherId())
+//                            .teacherCode(item.getAccount().getCode())
+//                            .teacherName(item.getAccount().getFullName())
+//                            .build();
+//                }).collect(Collectors.toList())
+//        );
+//
+//        return studentDto;
+//
+//    }
 
     @Override
     public StudentAccountResponse createAccountStudent(StudentAccountRequest request) {
@@ -126,30 +126,30 @@ public class StudentServiceImpl implements StudentService {
         return getStudentAccountResponse(savedStudent, savedAccount);
     }
 
-    @Override
-    public ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir) {
-
-        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
-
-        Page<Student> pageStudents = studentRepository.findAllStudentsByKeywordAndSemesterAndFacultyAndClass(keyword, semesterId, facultyId, classId, pageable);
-
-        List<StudentDto> students = pageStudents.getContent().stream()
-                .map((student) -> {
-                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
-                    studentDto.setStudentCode(student.getAccount().getCode());
-                    studentDto.setStudentId(student.getStudentId());
-                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
-                    studentDto.setSemesters(
-                            student.getSemesters().stream().map(
-                                    item -> modelMapper.map(item, SemesterDto.class)
-                            ).collect(Collectors.toSet())
-                    );
-
-                    return studentDto;
-                }).collect(Collectors.toList());
-
-        return AppUtils.createObjectResponse(pageStudents, students);
-    }
+//    @Override
+//    public ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir) {
+//
+//        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+//
+//        Page<Student> pageStudents = studentRepository.findAllStudentsByKeywordAndSemesterAndFacultyAndClass(keyword, semesterId, facultyId, classId, pageable);
+//
+//        List<StudentDto> students = pageStudents.getContent().stream()
+//                .map((student) -> {
+//                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+//                    studentDto.setStudentCode(student.getAccount().getCode());
+//                    studentDto.setStudentId(student.getStudentId());
+//                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+//                    studentDto.setSemesters(
+//                            student.getSemesters().stream().map(
+//                                    item -> modelMapper.map(item, SemesterDto.class)
+//                            ).collect(Collectors.toSet())
+//                    );
+//
+//                    return studentDto;
+//                }).collect(Collectors.toList());
+//
+//        return AppUtils.createObjectResponse(pageStudents, students);
+//    }
 
     private StudentAccountResponse getStudentAccountResponse(Student student, Account account) {
         StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);
@@ -166,57 +166,5 @@ public class StudentServiceImpl implements StudentService {
 
         return studentAccountResponse;
     }
-
-//    @Override
-//    public ObjectResponse getAllStudents(int pageNumber, int pageSize, String sortBy, String sortDir) {
-//
-//        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
-//
-//        Page<Student> studentPage = studentRepository.findAll(pageable);
-//
-//        return getObjectResponse(studentPage);
-//    }
-//
-//    @Override
-//    public ObjectResponse getAllStudentsByFacultyId(Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir) {
-//
-//        Faculty faculty = facultyRepository.findById(facultyId)
-//                    .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Faculty is not exists with given faculty id: "+facultyId));
-//
-//        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
-//
-//        Page<Student> studentPage = studentRepository.findByClazzFacultyFacultyId(faculty.getFacultyId(), pageable);
-//
-//        return getObjectResponse(studentPage);
-//    }
-//
-//    @Override
-//    public ObjectResponse searchStudentsByKeywordAndFacultyId(String keyword, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir) {
-//
-//        Faculty faculty = facultyRepository.findById(facultyId)
-//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Faculty is not exists with given faculty id: "+facultyId));
-//
-//        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
-//
-//        Page<Student> studentPage = studentRepository.searchByKeywordAndFaculty(keyword, faculty.getFacultyId(), pageable);
-//
-//        return getObjectResponse(studentPage);
-//    }
-//
-//    private ObjectResponse getObjectResponse(Page<Student> studentPage) {
-//        List<StudentAccountResponse> studentDtos = studentPage.getContent().stream()
-//                .map((item) -> {
-//                    Account account = item.getAccount();
-//                    StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);
-//                    studentAccountResponse.setStudentCode(account.getCode());
-//                    studentAccountResponse.setStudentId(item.getStudentId());
-//                    studentAccountResponse.setStudentClass(modelMapper.map(item.getClazz(), ClassDto.class));
-//                    studentAccountResponse.setLeader(item.isLeader());
-//
-//                    return studentAccountResponse;
-//                }).collect(Collectors.toList());
-//
-//        return AppUtils.createObjectResponse(studentPage, studentDtos);
-//    }
 
 }

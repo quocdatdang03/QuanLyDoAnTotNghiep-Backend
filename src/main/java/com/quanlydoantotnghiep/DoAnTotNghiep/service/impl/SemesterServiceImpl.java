@@ -2,6 +2,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.service.impl;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ObjectResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SchoolYearDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.CreateSemesterRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.semester.UpdateSemesterRequest;
@@ -86,6 +87,12 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public SemesterDto createSemester(CreateSemesterRequest createSemesterRequest) {
 
+        //  check if semesterName from request already exists -> throw exception
+        if(semesterRepository.existsBySemesterName(createSemesterRequest.getSemesterName()))
+        {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "SemesterName should be unique");
+        }
+
         SchoolYear schoolYear = schoolYearRepository.findById(createSemesterRequest.getSchoolYearId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "SchoolYear is not exists with given id: "+createSemesterRequest.getSchoolYearId()));
 
@@ -114,6 +121,12 @@ public class SemesterServiceImpl implements SemesterService {
 
         Semester semester = semesterRepository.findById(semesterId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+semesterId));
+
+        //  check if semesterName from request already exists -> throw exception
+        if(semesterRepository.existsBySemesterName(updateSemesterRequest.getSemesterName()) && !semester.getSemesterName().equals(updateSemesterRequest.getSemesterName()))
+        {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "SemesterName should be unique");
+        }
 
         semester.setSemesterName(updateSemesterRequest.getSemesterName());
         semester.setSchoolYear(schoolYear);

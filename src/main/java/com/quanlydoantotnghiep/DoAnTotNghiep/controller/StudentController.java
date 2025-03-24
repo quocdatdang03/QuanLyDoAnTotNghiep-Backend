@@ -16,12 +16,12 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @GetMapping("/{studentCode}")
-    public ResponseEntity<StudentDto> getStudentByStudentCode(
-            @PathVariable("studentCode") String studentCode
-    ) {
-
-
-        return ResponseEntity.ok(studentService.getStudentByStudentCode(studentCode));
-    }
+//    @GetMapping("/{studentCode}")
+//    public ResponseEntity<StudentDto> getStudentByStudentCode(
+//            @PathVariable("studentCode") String studentCode
+//    ) {
+//
+//
+//        return ResponseEntity.ok(studentService.getStudentByStudentCode(studentCode));
+//    }
 }

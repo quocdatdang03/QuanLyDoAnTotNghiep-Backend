@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface SchoolYearService {
 
-    ObjectResponse getAllSchoolYears(int pageNumber, int pageSize, String sortBy, String sortDir);
+    List<SchoolYearDto> getAllSchoolYears();
+    ObjectResponse getAllSchoolYearsByPagination(int pageNumber, int pageSize, String sortBy, String sortDir);
     SchoolYearDto createSchoolYear(SchoolYearRequest schoolYearRequest);
     String deleteSchoolYear(Long schoolYearId);
     SchoolYearDto updateSchoolYear(Long schoolYearId, SchoolYearRequest schoolYearRequest);

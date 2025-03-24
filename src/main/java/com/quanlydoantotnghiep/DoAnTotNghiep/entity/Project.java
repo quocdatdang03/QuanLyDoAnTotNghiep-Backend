@@ -38,22 +38,19 @@ public class Project {
     @JoinColumn(name = "maTrangThaiDeTai", referencedColumnName = "maTrangThaiDeTai")
     ProjectStatus projectStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "maHocKy", referencedColumnName = "maHocKy")
-    Semester semester;
-
     @OneToMany(mappedBy = "project")
     Set<ProgressReport> progressReports;
 
     @OneToMany(mappedBy = "project")
     Set<ProgressReview> progressReviews;
 
+    // 1 project chỉ thuộc về 1 sinh viên với học kỳ cụ thể
     @OneToOne
-    @JoinColumn(name = "maSinhVien", referencedColumnName = "maSinhVien")
-    Student student;
+    @JoinColumn(name = "maSinhVienHocKy", referencedColumnName = "maSinhVienHocKy")
+    StudentSemester studentSemester; // Thay vì trực tiếp gán với Student
 
     @ManyToOne
-    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
+    @JoinColumn(name = "maGiangVien", referencedColumnName = "maGiangVien")
     Teacher teacher;
 
     // 1 project thì có nhiều stage, (quan hệ @ManyToMany được thể hiện qua table ProjectStage)

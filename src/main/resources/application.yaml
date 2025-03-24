@@ -6,7 +6,7 @@ spring:
     name: QuanLyDoAnTotNghiep
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/doantotnghiep
+    url: jdbc:mysql://localhost:3306/dangquocdat_doantotnghiep
     username: root
     password: dat03122003
   jpa:

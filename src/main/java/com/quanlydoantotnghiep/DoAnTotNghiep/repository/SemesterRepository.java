@@ -23,4 +23,9 @@ public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
     // find current Semester
     Semester findByIsCurrentIsTrue();
+
+    Semester findBySemesterNameAndSchoolYearSchoolYearId(String semesterName, Long schoolYearId);
+
+    boolean existsBySemesterName(String semesterName);
+    boolean existsBySemesterNameAndSchoolYearSchoolYearId(String semesterName, Long schoolYearId);
 }

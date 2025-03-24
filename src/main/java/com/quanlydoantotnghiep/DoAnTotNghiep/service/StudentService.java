@@ -7,11 +7,8 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccount
 
 public interface StudentService {
 
-    StudentDto getStudentByStudentCode(String studentCode);
+//    StudentDto getStudentByStudentCode(String studentCode);
     StudentAccountResponse createAccountStudent(StudentAccountRequest request);
-//    ObjectResponse getAllStudents(int pageNumber, int pageSize, String sortBy, String sortDir);
-//    ObjectResponse getAllStudentsByFacultyId(Long facultyId ,int pageNumber, int pageSize, String sortBy, String sortDir);
-//    ObjectResponse searchStudentsByKeywordAndFacultyId(String keyword, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir);
 
-    ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
+//    ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
 }

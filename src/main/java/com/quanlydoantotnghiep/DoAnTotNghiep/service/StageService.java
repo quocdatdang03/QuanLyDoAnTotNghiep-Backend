@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface StageService {
 
+    // +++++++ method for role Teacher
     StageDto createStage(AccountDto accountDto, CreateStageRequest createStageRequest);
     StageDto updateStage(Long stageId, AccountDto accountDto, CreateStageRequest updateStageRequest);
     String deleteStage(Long stageId, AccountDto accountDto);
@@ -18,4 +19,8 @@ public interface StageService {
     StageDto updateStageStatus(Long stageId, Long stageStatusId);
     List<StageStatusDto> getAllStageStatuses();
     List<StageDto> updateStageOrder(AccountDto accountDto, List<Long> newStageIds);
+    // +++++++ method for role Teacher
+
+    // +++++++ method for role Student
+    
 }

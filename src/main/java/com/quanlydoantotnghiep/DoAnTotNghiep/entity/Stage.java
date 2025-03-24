@@ -51,7 +51,7 @@ public class Stage {
     StageStatus stageStatus;
 
     @ManyToOne
-    @JoinColumn(name = "maGiangVienHD", referencedColumnName = "maGiangVienHD")
+    @JoinColumn(name = "maGiangVien", referencedColumnName = "maGiangVien")
     Teacher teacher;
 
     @ManyToOne

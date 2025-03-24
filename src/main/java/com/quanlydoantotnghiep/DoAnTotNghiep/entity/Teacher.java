@@ -14,12 +14,12 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "GIANGVIENHD")
+@Table(name = "GIANGVIEN")
 public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "maGiangVienHD")
+    @Column(name = "maGiangVien")
     Long teacherId;
 
     @OneToOne
@@ -37,11 +37,11 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     Set<ProgressReview> progressReviews;
 
-    @OneToMany(mappedBy = "teacher")
-    Set<Notification> notifications;
-
-    @OneToMany(mappedBy = "teacher")
-    Set<Document> documents;
+//    @OneToMany(mappedBy = "teacher")
+//    Set<Notification> notifications;
+//
+//    @OneToMany(mappedBy = "teacher")
+//    Set<Document> documents;
 
     @OneToMany(mappedBy = "teacher")
     Set<Stage> stages;
@@ -49,18 +49,13 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     Set<Project> projects;
 
-    // 1 GVHD có thể được đề xuất bởi nhiều sinh viên
-    @ManyToMany
-    @JoinTable(
-            name = "GIANGVIENHD_DEXUAT_SINHVIEN",
-            joinColumns = @JoinColumn(name = "maGiangVienHD"),
-            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
-    )
-    Set<Student> students = new HashSet<>();
+    // 1 GVHD có thể được đề xuất bởi nhiều sinh viên theo tung hoc ky
+    @OneToMany(mappedBy = "teacher")
+    Set<StudentTeacherProposal> proposedByStudents = new HashSet<>();
 
-    // 1 GVHD có thể quản lý nhiều sinh viên
+    // 1 GVHD có thể quản lý nhiều sinh viên ở nhiều học kỳ
     @OneToMany(mappedBy = "instructor")
-    Set<Student> managedStudents = new HashSet<>();
+    Set<StudentSemester> studentSemesters = new HashSet<>();
 
     @Column(name = "truongBoMon")
     boolean isLeader;

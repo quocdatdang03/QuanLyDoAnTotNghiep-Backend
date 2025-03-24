@@ -34,7 +34,7 @@ public class ProgressReview {
     boolean isApproved;
 
     @ManyToOne
-    @JoinColumn(name="maGiangVienHD", referencedColumnName = "maGiangVienHD")
+    @JoinColumn(name="maGiangVien", referencedColumnName = "maGiangVien")
     Teacher teacher;
 
     @ManyToOne

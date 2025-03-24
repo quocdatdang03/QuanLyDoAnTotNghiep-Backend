@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -21,20 +22,23 @@ public class Semester {
     @Column(name = "maHocKy")
     Long semesterId;
 
-    @Column(name = "hocKy")
+    @Column(name = "hocKy", unique = true)
     String semesterName;
 
     @ManyToOne
     @JoinColumn(name = "maNamHoc", referencedColumnName = "maNamHoc")
     SchoolYear schoolYear;
 
-    @ManyToMany
-    @JoinTable(
-            name = "HOCKY_SINHVIEN",
-            joinColumns = @JoinColumn(name = "maHocKy"),
-            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
-    )
-    Set<Student> students;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "HOCKY_SINHVIEN",
+//            joinColumns = @JoinColumn(name = "maHocKy"),
+//            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
+//    )
+//    Set<Student> students;
+
+    @OneToMany(mappedBy = "semester")
+    Set<StudentSemester> studentSemesters = new HashSet<>();
 
     @Column(name = "laHocKyHienTai")
     boolean isCurrent;
@@ -42,6 +46,4 @@ public class Semester {
     @Column(name = "daXoa")
     boolean flagDelete;
 
-    @OneToMany(mappedBy = "semester")
-    Set<Project> projects;
 }
