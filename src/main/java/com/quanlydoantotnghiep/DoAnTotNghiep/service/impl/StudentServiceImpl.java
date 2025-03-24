@@ -7,11 +7,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.StudentAccountR
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.RoleDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccountResponse;
-import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Clazz;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Role;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
+import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.StudentService;
@@ -38,6 +34,8 @@ public class StudentServiceImpl implements StudentService {
     private final RoleRepository roleRepository;
     private final ClassRepository classRepository;
     private final FacultyRepository facultyRepository;
+    private final StudentSemesterRepository studentSemesterRepository;
+    private final SemesterRepository semesterRepository;
 //    private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -126,30 +124,33 @@ public class StudentServiceImpl implements StudentService {
         return getStudentAccountResponse(savedStudent, savedAccount);
     }
 
-//    @Override
-//    public ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir) {
-//
-//        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
-//
-//        Page<Student> pageStudents = studentRepository.findAllStudentsByKeywordAndSemesterAndFacultyAndClass(keyword, semesterId, facultyId, classId, pageable);
-//
-//        List<StudentDto> students = pageStudents.getContent().stream()
-//                .map((student) -> {
-//                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
-//                    studentDto.setStudentCode(student.getAccount().getCode());
-//                    studentDto.setStudentId(student.getStudentId());
-//                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
-//                    studentDto.setSemesters(
-//                            student.getSemesters().stream().map(
-//                                    item -> modelMapper.map(item, SemesterDto.class)
-//                            ).collect(Collectors.toSet())
-//                    );
-//
-//                    return studentDto;
-//                }).collect(Collectors.toList());
-//
-//        return AppUtils.createObjectResponse(pageStudents, students);
-//    }
+    @Override
+    public ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        // get Current semester
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        Page<Student> pageStudents = studentRepository.findAllStudentsByKeywordAndSemesterAndFacultyAndClass(keyword, semesterId!=null ? semesterId : currentSemester.getSemesterId(), facultyId, classId, pageable);
+
+        List<StudentDto> students = pageStudents.getContent().stream()
+                .map((student) -> {
+                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+                    studentDto.setStudentCode(student.getAccount().getCode());
+                    studentDto.setStudentId(student.getStudentId());
+                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+
+                    StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), semesterId!=null ? semesterId : currentSemester.getSemesterId());
+                    studentDto.setSemester(
+                            modelMapper.map(studentSemester.getSemester(), SemesterDto.class)
+                    );
+
+                    return studentDto;
+                }).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(pageStudents, students);
+    }
 
     private StudentAccountResponse getStudentAccountResponse(Student student, Account account) {
         StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);

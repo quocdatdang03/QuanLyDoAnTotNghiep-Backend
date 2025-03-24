@@ -15,7 +15,7 @@ import java.util.List;
 public interface SemesterRepository extends JpaRepository<Semester, Long> {
 
     Page<Semester> findByFlagDeleteIsFalse(Pageable pageable);
-    List<Semester> findByFlagDeleteIsFalse();
+    List<Semester> findByFlagDeleteIsFalse(Sort sort);
 
     @Modifying
     @Query("UPDATE Semester s SET s.isCurrent=false")

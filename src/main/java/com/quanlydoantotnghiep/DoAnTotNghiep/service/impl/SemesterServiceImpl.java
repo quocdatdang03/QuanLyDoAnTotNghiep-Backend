@@ -59,7 +59,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public List<SemesterDto> getAllSemesters() {
 
-        List<Semester> semesters = semesterRepository.findByFlagDeleteIsFalse();
+        // Sort by schoolYearName by DESC and semesterName by DEDC
+        String[] sortBy = {"schoolYear."+AppConstant.SCHOOLYEAR_DEFAULT_SORT_BY, AppConstant.SEMESTER_DEFAULT_SORT_BY};
+        Sort sort = Sort.by(sortBy).descending();
+
+        List<Semester> semesters = semesterRepository.findByFlagDeleteIsFalse(sort);
 
         return semesters.stream().map(
                 item -> modelMapper.map(item, SemesterDto.class)

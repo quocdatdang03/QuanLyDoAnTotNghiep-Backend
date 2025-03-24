@@ -10,5 +10,5 @@ public interface StudentService {
 //    StudentDto getStudentByStudentCode(String studentCode);
     StudentAccountResponse createAccountStudent(StudentAccountRequest request);
 
-//    ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
+    ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
 }

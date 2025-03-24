@@ -29,14 +29,6 @@ public class Semester {
     @JoinColumn(name = "maNamHoc", referencedColumnName = "maNamHoc")
     SchoolYear schoolYear;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "HOCKY_SINHVIEN",
-//            joinColumns = @JoinColumn(name = "maHocKy"),
-//            inverseJoinColumns = @JoinColumn(name = "maSinhVien")
-//    )
-//    Set<Student> students;
-
     @OneToMany(mappedBy = "semester")
     Set<StudentSemester> studentSemesters = new HashSet<>();
 

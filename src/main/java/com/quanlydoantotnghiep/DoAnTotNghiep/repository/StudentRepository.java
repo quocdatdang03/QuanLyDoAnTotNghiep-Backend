@@ -28,26 +28,28 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 //            @Param("keyword") String keyword,
 //            @Param("facultyId") Long facultyId,
 //            Pageable pageable);
-//
-//    // A IS NULL OR CONDITION : Nếu A mà có giá trị là null thì không thực hiện CONDITION
-//    @Query("""
-//        SELECT s FROM Student s
-//            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-//                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
-//                AND (:classId IS NULL OR s.clazz.classId = :classId)
-//                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
-//                AND (:semesterId IS NULL OR EXISTS (
-//                            SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
-//                        )
-//                    )
-//    """)
-//    Page<Student> findAllStudentsByKeywordAndSemesterAndFacultyAndClass(
-//             @Param("keyword") String keyword,
-//             @Param("semesterId") Long semesterId,
-//             @Param("facultyId") Long facultyId,
-//             @Param("classId") Long classId,
-//             Pageable pageable
-//    );
+
+    // A IS NULL OR CONDITION : Nếu A mà có giá trị là null thì không thực hiện CONDITION
+    @Query("""
+        SELECT s FROM Student s
+            WHERE (
+                    LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                    OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                )
+                AND (:classId IS NULL OR s.clazz.classId = :classId)
+                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
+                AND EXISTS (
+                            SELECT 1 FROM s.studentSemesters stm WHERE stm.semester.semesterId = :semesterId
+                        )
+                    
+    """)
+    Page<Student> findAllStudentsByKeywordAndSemesterAndFacultyAndClass(
+             @Param("keyword") String keyword,
+             @Param("semesterId") Long semesterId,
+             @Param("facultyId") Long facultyId,
+             @Param("classId") Long classId,
+             Pageable pageable
+    );
 //
 //
 //    @Query("""
