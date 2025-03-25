@@ -95,30 +95,38 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
         return AppUtils.createObjectResponse(pageStudents, students);
     }
 
-//    @Override
-//    public TeacherAccountResponse getInstructorByStudentCode(String studentCode) {
-//
-//        Student student = studentRepository.findByAccount_Code(studentCode)
-//                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given code: "+studentCode));
-//
-//        Teacher instructor = student.getInstructor();
-//
-//        if(instructor==null)
-//            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't have instructor");
-//
-//        // convert to TeacherAccountResponse:
-//        TeacherAccountResponse teacherAccountResponse = modelMapper.map(instructor.getAccount(), TeacherAccountResponse.class);
-//        teacherAccountResponse.setTeacherCode(instructor.getAccount().getCode());
-//        teacherAccountResponse.setDegree(
-//                modelMapper.map(instructor.getDegree(), DegreeDto.class)
-//        );
-//        teacherAccountResponse.setFaculty(
-//                modelMapper.map(instructor.getFaculty(), FacultyDto.class)
-//        );
-//        teacherAccountResponse.setLeader(instructor.isLeader());
-//
-//        return teacherAccountResponse;
-//    }
+    @Override
+    public TeacherAccountResponse getInstructorByStudentCode(String studentCode) {
+
+        Student student = studentRepository.findByAccount_Code(studentCode)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given code: "+studentCode));
+
+        // get current semester
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), currentSemester.getSemesterId());
+
+        if(studentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't exists in semester: "+currentSemester.getSemesterName());
+
+        Teacher instructor = studentSemester.getInstructor();
+
+        if(instructor==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't have instructor in semester "+currentSemester.getSemesterName());
+
+        // convert to TeacherAccountResponse:
+        TeacherAccountResponse teacherAccountResponse = modelMapper.map(instructor.getAccount(), TeacherAccountResponse.class);
+        teacherAccountResponse.setTeacherCode(instructor.getAccount().getCode());
+        teacherAccountResponse.setDegree(
+                modelMapper.map(instructor.getDegree(), DegreeDto.class)
+        );
+        teacherAccountResponse.setFaculty(
+                modelMapper.map(instructor.getFaculty(), FacultyDto.class)
+        );
+        teacherAccountResponse.setLeader(instructor.isLeader());
+
+        return teacherAccountResponse;
+    }
 
     @Override
     public List<ClassDto> getAllClassesByFaculty(AccountDto accountDto) {
@@ -208,12 +216,12 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
 
         StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), currentSemester.getSemesterId());
 
-        if(studentSemester!=null)
-        {
-            studentSemester.setInstructor(null);
+        if(studentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't exists in semester: "+currentSemester.getSemesterName());
 
-            studentSemesterRepository.save(studentSemester);
-        }
+        studentSemester.setInstructor(null);
+
+        studentSemesterRepository.save(studentSemester);
 
         // convert to DTO:
         return convertToStudentDto(student, currentSemester);
@@ -232,6 +240,9 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
         Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
 
         StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), currentSemester.getSemesterId());
+
+        if(studentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Student doesn't exists in semester: "+currentSemester.getSemesterName());
 
         // check if student have already registered project in this current semester -> set instructor for this project
         if(studentSemester.getProject()!=null) {

@@ -13,9 +13,13 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 //    boolean existsByProjectName(String projectName);
-//
-//    Optional<Project> findByStudent_Account_Code(String studentCode);
-//
+
+    @Query("""
+        SELECT p FROM Project p
+            WHERE p.studentSemester.semester.semesterId = :semesterId AND p.studentSemester.student.account.code = :studentCode
+    """)
+    Optional<Project> findProjectByStudentAndSemester(@Param("studentCode") String studentCode, @Param("semesterId") Long semesterId);
+
 //    @Query("""
 //        SELECT p FROM Project p
 //            WHERE (LOWER(p.student.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
