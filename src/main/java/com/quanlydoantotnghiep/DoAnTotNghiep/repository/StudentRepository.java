@@ -13,9 +13,9 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
 //    Optional<Student> findByAccount_AccountId(Long accountId);
-//    Optional<Student> findByAccount_Code(String studentCode);
+    Optional<Student> findByAccount_Code(String studentCode);
 //    Page<Student> findByClazzFacultyFacultyId(Long facultyId, Pageable pageable);
-//    List<Student> findAllByAccount_CodeIn(List<String> studentCode);
+    List<Student> findAllByAccount_CodeIn(List<String> studentCode);
 //
 //    @Query("""
 //        SELECT s
@@ -30,18 +30,27 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 //            Pageable pageable);
 
     // A IS NULL OR CONDITION : Nếu A mà có giá trị là null thì không thực hiện CONDITION
+//    @Query("""
+//        SELECT s FROM Student s
+//            WHERE (
+//                    LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+//                    OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
+//                )
+//                AND (:classId IS NULL OR s.clazz.classId = :classId)
+//                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
+//                AND EXISTS (
+//                            SELECT 1 FROM s.studentSemesters stm WHERE stm.semester.semesterId = :semesterId
+//                        )
+//
+//    """)
     @Query("""
-        SELECT s FROM Student s
-            WHERE (
-                    LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                    OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                )
-                AND (:classId IS NULL OR s.clazz.classId = :classId)
-                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
-                AND EXISTS (
-                            SELECT 1 FROM s.studentSemesters stm WHERE stm.semester.semesterId = :semesterId
-                        )
-                    
+         SELECT s FROM Student s
+         JOIN s.studentSemesters stm
+         WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+             AND (:classId IS NULL OR s.clazz.classId = :classId)
+             AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
+             AND stm.semester.semesterId = :semesterId
     """)
     Page<Student> findAllStudentsByKeywordAndSemesterAndFacultyAndClass(
              @Param("keyword") String keyword,
@@ -50,50 +59,60 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
              @Param("classId") Long classId,
              Pageable pageable
     );
-//
-//
+
+
+    // CÁCH 1 : DÙNG EXISTS
 //    @Query("""
 //        SELECT s FROM Student s
 //            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
 //                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
 //                AND (:classId IS NULL OR s.clazz.classId = :classId)
 //                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
-//                AND (:semesterId IS NULL OR EXISTS (
-//                            SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
-//                        )
-//                    )
-//                AND s.instructor IS NULL
+//                AND EXISTS (
+//                    SELECT 1 FROM s.studentSemesters stm
+//                        WHERE stm.instructor IS NULL
+//                              AND (:semesterId IS NULL OR stm.semester.semesterId = :semesterId)
+//                )
 //    """)
-//    Page<Student> findAllStudentsWithoutInstructor(
-//            @Param("keyword") String keyword,
-//            @Param("semesterId") Long semesterId,
-//            @Param("facultyId") Long facultyId,
-//            @Param("classId") Long classId,
-//            Pageable pageable
-//    );
-//
-//    @Query("""
-//        SELECT s FROM Student s
-//            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-//                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
-//                AND (:classId IS NULL OR s.clazz.classId = :classId)
-//                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
-//                AND (:semesterId IS NULL OR EXISTS (
-//                            SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
-//                        )
-//                    )
-//                AND s.instructor IS NOT NULL
-//                AND (:instructorCode IS NULL OR s.instructor.account.code = :instructorCode)
-//    """)
-//    Page<Student> findAllStudentsHavingInstructor(
-//            @Param("keyword") String keyword,
-//            @Param("semesterId") Long semesterId,
-//            @Param("facultyId") Long facultyId,
-//            @Param("classId") Long classId,
-//            @Param("instructorCode") String instructorCode,
-//            Pageable pageable
-//    );
-//
+    // CÁCH  : DÙNG JOIN
+    @Query("""
+         SELECT s FROM Student s
+         JOIN s.studentSemesters stm
+         WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+             OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+             AND (:classId IS NULL OR s.clazz.classId = :classId)
+             AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
+             AND stm.instructor IS NULL
+             AND (:semesterId IS NULL OR stm.semester.semesterId = :semesterId)
+    """)
+    Page<Student> findAllStudentsWithoutInstructor(
+            @Param("keyword") String keyword,
+            @Param("semesterId") Long semesterId,
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId,
+            Pageable pageable
+    );
+
+    @Query("""
+        SELECT s FROM Student s
+        JOIN s.studentSemesters stm
+            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                AND (:classId IS NULL OR s.clazz.classId = :classId)
+                AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId )
+                AND stm.instructor IS NOT NULL
+                AND (:semesterId IS NULL OR stm.semester.semesterId = :semesterId)
+                AND (:instructorCode IS NULL OR stm.instructor.account.code = :instructorCode)
+    """)
+    Page<Student> findAllStudentsHavingInstructor(
+            @Param("keyword") String keyword,
+            @Param("semesterId") Long semesterId,
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId,
+            @Param("instructorCode") String instructorCode,
+            Pageable pageable
+    );
+
 //    @Query("""
 //        SELECT s FROM Student s
 //            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
@@ -106,7 +125,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 //                AND (
 //                    :havingProject IS NULL OR
 //                        (:havingProject = true AND s.project IS NOT NULL)
-//                        OR (:havingProject = false AND s.project IS NULL)
+//                            OR (:havingProject = false AND s.project IS NULL)
 //                )
 //                AND  s.instructor.account.code = :teacherCode
 //    """)

@@ -1,7 +1,7 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.service;
 
-import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 
 import java.util.List;
 

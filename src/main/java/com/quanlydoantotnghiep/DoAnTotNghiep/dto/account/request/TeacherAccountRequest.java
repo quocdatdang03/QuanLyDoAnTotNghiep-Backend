@@ -2,6 +2,7 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -30,6 +31,8 @@ public class TeacherAccountRequest {
     Set<Long> roleIds;
     Long degreeId;
     Long facultyId;
+
+    @JsonProperty("isLeader")
     boolean isLeader;
     boolean enable;
 }

@@ -1,7 +1,7 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.service.impl;
 
-import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Account;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Clazz;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.AccountRepository;
