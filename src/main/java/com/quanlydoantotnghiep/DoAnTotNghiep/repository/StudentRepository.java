@@ -113,29 +113,29 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             Pageable pageable
     );
 
-//    @Query("""
-//        SELECT s FROM Student s
-//            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-//                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
-//                AND (:classId IS NULL OR s.clazz.classId = :classId)
-//                AND (:semesterId IS NULL OR EXISTS (
-//                            SELECT 1 FROM s.semesters sem WHERE sem.semesterId = :semesterId
-//                        )
-//                    )
-//                AND (
-//                    :havingProject IS NULL OR
-//                        (:havingProject = true AND s.project IS NOT NULL)
-//                            OR (:havingProject = false AND s.project IS NULL)
-//                )
-//                AND  s.instructor.account.code = :teacherCode
-//    """)
-//    Page<Student> findAllStudentsByInstructor(
-//            @Param("keyword") String keyword,
-//            @Param("semesterId") Long semesterId,
-//            @Param("classId") Long classId,
-//            @Param("havingProject") Boolean havingProject,
-//            @Param("teacherCode") String teacherCode,
-//            Pageable pageable
-//    );
+    @Query("""
+        SELECT s FROM Student s
+            JOIN s.studentSemesters stm
+            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                AND (:classId IS NULL OR s.clazz.classId = :classId)
+                AND (:semesterId IS NULL OR stm.semester.semesterId = :semesterId)
+                AND (
+                    :havingProject IS NULL OR
+                        (
+                            (:havingProject = true AND stm.project IS NOT NULL)
+                            OR (:havingProject = false AND stm.project IS NULL)
+                        )
+                )
+                AND stm.instructor.account.code = :teacherCode
+    """)
+    Page<Student> findAllStudentsByInstructorAndSemester(
+            @Param("keyword") String keyword,
+            @Param("semesterId") Long semesterId,
+            @Param("classId") Long classId,
+            @Param("havingProject") Boolean havingProject,
+            @Param("teacherCode") String teacherCode,
+            Pageable pageable
+    );
 
 }

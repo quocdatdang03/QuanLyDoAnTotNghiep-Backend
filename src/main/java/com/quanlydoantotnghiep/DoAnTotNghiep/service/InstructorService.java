@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface InstructorService {
 
+    ProjectDto getProjectByStudentCodeAndSemester(String studentCode, Long semesterId);
     ObjectResponse getAllStudentsOfInstructor(AccountDto accountDto, String keyword, Long semesterId, Long classId, Boolean havingProject, int pageNumber, int pageSize, String sortBy, String sortDir);
     ObjectResponse getAllProjectsManagedByInstructor(AccountDto accountDto, String keyword, Long semesterId, Long classId, int pageNumber, int pageSize, String sortBy, String sortDir);
     ProjectDto approveProject(Long projectId);

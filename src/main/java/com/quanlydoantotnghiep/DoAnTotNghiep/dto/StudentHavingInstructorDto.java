@@ -31,7 +31,7 @@ public class StudentHavingInstructorDto {
     Set<RoleDto> roles;
     boolean enable;
     ClassDto studentClass;
-    Set<SemesterDto> semesters;
+    SemesterDto semester;
     List<RecommendedTeacherDto> recommendedTeachers;
     TeacherAccountResponse instructor;
     StudentProjectDto project;
