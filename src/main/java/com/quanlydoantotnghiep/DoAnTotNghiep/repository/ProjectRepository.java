@@ -38,13 +38,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             Pageable pageable
     );
 
-//    @Query("""
-//        SELECT p FROM Project p
-//            WHERE p.teacher.account.code = :teacherCode AND p.semester.semesterId = :semesterId
-//    """)
-//    List<Project> findAllProjectsByTeacherAndSemester(
-//            @Param("teacherCode") String teacherCode,
-//            @Param("semesterId") Long semesterId
-//    );
+    @Query("""
+        SELECT p FROM Project p
+            WHERE p.teacher.account.code = :teacherCode AND p.studentSemester.semester.semesterId = :semesterId
+    """)
+    List<Project> findAllProjectsByTeacherAndSemester(
+            @Param("teacherCode") String teacherCode,
+            @Param("semesterId") Long semesterId
+    );
 
 }
