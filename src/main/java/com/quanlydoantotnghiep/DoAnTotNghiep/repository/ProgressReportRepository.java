@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ProgressReportRepository extends JpaRepository<ProgressReport, Long> {
 
-    List<ProgressReport> findByProjectProjectId(Long projectId, Sort sort);
 
 }

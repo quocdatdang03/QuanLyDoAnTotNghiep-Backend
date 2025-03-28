@@ -25,6 +25,6 @@ public class ProgressReportFile {
     String pathFile;
 
     @ManyToOne
-    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao")
+    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao", nullable = false)
     ProgressReport progressReport;
 }

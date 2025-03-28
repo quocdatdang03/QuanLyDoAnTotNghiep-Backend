@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface ProgressReviewRepository extends JpaRepository<ProgressReview, Long> {
 
-    List<ProgressReview> findByProjectProjectId(Long projectId, Sort sort);
 }

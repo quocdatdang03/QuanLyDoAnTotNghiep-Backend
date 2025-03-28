@@ -35,22 +35,16 @@ public class Project {
     List<ProjectFile> projectFiles = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "maTrangThaiDeTai", referencedColumnName = "maTrangThaiDeTai")
+    @JoinColumn(name = "maTrangThaiDeTai", referencedColumnName = "maTrangThaiDeTai", nullable = false)
     ProjectStatus projectStatus;
-
-    @OneToMany(mappedBy = "project")
-    Set<ProgressReport> progressReports;
-
-    @OneToMany(mappedBy = "project")
-    Set<ProgressReview> progressReviews;
 
     // 1 project chỉ thuộc về 1 sinh viên với học kỳ cụ thể
     @OneToOne
-    @JoinColumn(name = "maSinhVienHocKy", referencedColumnName = "maSinhVienHocKy")
+    @JoinColumn(name = "maSinhVienHocKy", referencedColumnName = "maSinhVienHocKy", nullable = false)
     StudentSemester studentSemester; // Thay vì trực tiếp gán với Student
 
     @ManyToOne
-    @JoinColumn(name = "maGiangVien", referencedColumnName = "maGiangVien")
+    @JoinColumn(name = "maGiangVien", referencedColumnName = "maGiangVien", nullable = false)
     Teacher teacher;
 
     // 1 project thì có nhiều stage, (quan hệ @ManyToMany được thể hiện qua table ProjectStage)

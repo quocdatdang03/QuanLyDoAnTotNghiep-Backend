@@ -26,7 +26,7 @@ public class ProgressReport {
     Long progressReportId;
 
     @Column(name = "tieuDeBaoCao",columnDefinition = "nvarchar(100)", nullable = false)
-    String progressReportName;
+    String progressReportTitle;
 
     @Column(name = "noiDungBaoCao", columnDefinition = "nvarchar(100)", nullable = false)
     String progressReportContent;
@@ -37,16 +37,14 @@ public class ProgressReport {
     @OneToMany(mappedBy = "progressReport", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProgressReportFile> progressReportFiles = new ArrayList<>();
 
+    // 1 progressReport có nhiều progressReview
     @OneToMany(mappedBy = "progressReport")
     Set<ProgressReview> progressReviews;
 
+    // 1 progressReport chỉ thuộc về 1 giai đoạn của 1 project (projectStage)
     @ManyToOne
-    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
-    Project project;
-
-//    @ManyToOne
-//    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
-//    Stage stage;
+    @JoinColumn(name = "maDeTaiGiaiDoan", referencedColumnName = "maDeTaiGiaiDoan", nullable = false)
+    ProjectStage projectStage;
 
     @Column(name = "ngayTao")
     LocalDateTime createdAt;

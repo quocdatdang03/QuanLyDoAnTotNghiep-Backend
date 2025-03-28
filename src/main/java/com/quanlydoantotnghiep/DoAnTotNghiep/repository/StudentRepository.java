@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-//    Optional<Student> findByAccount_AccountId(Long accountId);
+    Optional<Student> findByAccount_AccountId(Long accountId);
     Optional<Student> findByAccount_Code(String studentCode);
 //    Page<Student> findByClazzFacultyFacultyId(Long facultyId, Pageable pageable);
     List<Student> findAllByAccount_CodeIn(List<String> studentCode);

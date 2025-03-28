@@ -24,7 +24,7 @@ public class ProjectFile {
     String pathFile;
 
     @ManyToOne
-    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
+    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai", nullable = false)
     Project project;
 }
 

@@ -34,15 +34,12 @@ public class ProgressReview {
     boolean isApproved;
 
     @ManyToOne
-    @JoinColumn(name="maGiangVien", referencedColumnName = "maGiangVien")
+    @JoinColumn(name="maGiangVien", referencedColumnName = "maGiangVien", nullable = false)
     Teacher teacher;
 
+    // 1 progressReview thì chỉ thuộc về 1 progressReport
     @ManyToOne
-    @JoinColumn(name = "maDeTai", referencedColumnName = "maDeTai")
-    Project project;
-
-    @ManyToOne
-    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao")
+    @JoinColumn(name = "maBaoCao", referencedColumnName = "maBaoCao", nullable = false)
     ProgressReport progressReport;
 
     @OneToMany(mappedBy = "progressReview", cascade = CascadeType.ALL, orphanRemoval = true)

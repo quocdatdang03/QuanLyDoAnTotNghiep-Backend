@@ -26,6 +26,6 @@ public class StageFile {
     String pathFile;
 
     @ManyToOne
-    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan")
+    @JoinColumn(name = "maGiaiDoan", referencedColumnName = "maGiaiDoan", nullable = false)
     Stage stage;
 }
