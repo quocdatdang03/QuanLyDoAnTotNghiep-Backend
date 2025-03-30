@@ -1,5 +1,6 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.dto.progressReport;
 
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.progressReview.ProgressReviewDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageDto;
 import lombok.*;
