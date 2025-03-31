@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProgressReportService {
 
-    List<ProgressReportDto> getAllProgressReportByProject(Long projectId);
+    List<ProgressReportDto> getAllProgressReportByProject(Long projectId, Long stageId, String sortDir);
     ProgressReportDto getProgressReportById(Long progressReportId);
     ProgressReportDto createProgressReport(CreateProgressReportRequest createProgressReportRequest, AccountDto accountDto);
     ProgressReportDto updateProgressReport(UpdateProgressReportRequest updateProgressReportRequest, AccountDto accountDto);

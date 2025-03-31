@@ -13,6 +13,11 @@ public interface ProgressReportRepository extends JpaRepository<ProgressReport, 
     @Query("""
         SELECT p FROM ProgressReport p
             WHERE p.projectStage.project.projectId = :projectId
+                AND (:stageId IS NULL OR p.projectStage.stage.stageId = :stageId)
     """)
-    List<ProgressReport> findProgressReportByProject(@Param("projectId") Long projectId, Sort sort);
+    List<ProgressReport> findProgressReportByProject(
+            @Param("projectId") Long projectId,
+            @Param("stageId") Long stageId,
+            Sort sort
+    );
 }

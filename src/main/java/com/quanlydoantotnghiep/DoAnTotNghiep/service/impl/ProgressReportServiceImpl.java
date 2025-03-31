@@ -181,12 +181,19 @@ public class ProgressReportServiceImpl implements ProgressReportService {
     }
 
     @Override
-    public List<ProgressReportDto> getAllProgressReportByProject(Long projectId) {
+    public List<ProgressReportDto>
+    getAllProgressReportByProject(Long projectId, Long stageId, String sortDir) {
 
         // Sort by createdAt by descending (Lấy cái mới nhất trước)
-        Sort sort = Sort.by("createdAt").descending();
+        Sort sort = Sort.by("createdAt");
 
-        List<ProgressReport> progressReports = progressReportRepository.findProgressReportByProject(projectId, sort);
+        if(sortDir.equals("asc"))
+            sort = sort.ascending();
+        else if(sortDir.equals("desc"))
+            sort = sort.descending();
+
+        // Can Filter by stage or not
+        List<ProgressReport> progressReports = progressReportRepository.findProgressReportByProject(projectId, stageId, sort);
 
         return progressReports.stream().map(
                 item -> {
