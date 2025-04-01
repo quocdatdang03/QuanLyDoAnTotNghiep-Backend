@@ -7,4 +7,5 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.progressReview.request.CreatePr
 public interface ProgressReviewService {
 
     ProgressReviewDto createProgressReview(CreateProgressReviewRequest createProgressReviewRequest, AccountDto accountDto);
+    String deleteProgressReviewFileById(Long progressReviewFileId, AccountDto accountDto);
 }

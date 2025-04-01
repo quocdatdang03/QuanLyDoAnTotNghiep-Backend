@@ -28,6 +28,7 @@ public class ProgressReviewServiceImpl implements ProgressReviewService {
     private final ProgressReportRepository progressReportRepository;
     private final StageStatusRepository stageStatusRepository;
     private final ProjectStageRepository projectStageRepository;
+    private final ProgressReviewFileRepository progressReviewFileRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
@@ -126,4 +127,26 @@ public class ProgressReviewServiceImpl implements ProgressReviewService {
 
         return progressReviewDto;
     }
+
+    @Override
+    public String deleteProgressReviewFileById(Long progressReviewFileId, AccountDto accountDto) {
+
+        // get teacher for validation
+        Teacher teacher = teacherRepository.findByAccount_AccountId(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given accountId: "+accountDto.getAccountId()));
+
+        // get progress review file
+        ProgressReviewFile progressReviewFile = progressReviewFileRepository.findById(progressReviewFileId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "ProgressReviewFile is not exists with given id: "+progressReviewFileId));
+
+        // check if progressReviewFile does not belong to this teacher -> throw error
+        if(!teacher.getTeacherId().equals(progressReviewFile.getProgressReview().getTeacher().getTeacherId()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error whem delete ProgressReviewFile");
+
+        // delete progressReviewFile
+        progressReviewFileRepository.deleteById(progressReviewFile.getProgressReviewFileId());
+
+        return "ProgressReviewFile with id: "+progressReviewFile.getProgressReviewFileId()+" was deleted successfully";
+    }
+
 }

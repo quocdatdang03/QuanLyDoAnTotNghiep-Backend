@@ -9,6 +9,8 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDt
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectFileDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectStatusDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageStatusDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final StudentSemesterRepository studentSemesterRepository;
     private final ProjectRepository projectRepository;
     private final ProjectStatusRepository projectStatusRepository;
+    private final ProjectStageRepository projectStageRepository;
     private final ModelMapper modelMapper;
 
 
@@ -53,6 +57,15 @@ public class InstructorServiceImpl implements InstructorService {
 
         // convert to ProjectDto:
         return convertToProjectDto(project, studentSemester);
+    }
+
+    @Override
+    public ProjectDto getProjectByProjectId(Long projectId) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        return convertToProjectDto(project, project.getStudentSemester());
     }
 
     @Override
@@ -149,6 +162,47 @@ public class InstructorServiceImpl implements InstructorService {
         Project savedProject = projectRepository.save(project);
 
         return convertToProjectDto(savedProject, savedProject.getStudentSemester());
+    }
+
+    @Override
+    public List<StageDto> getAllStagesByProject(Long projectId) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        // sort by stageOrder by ascending:
+        Sort sort = Sort.by("stage.stageOrder").ascending();
+
+        // get List ProjectStage by projectId
+        List<ProjectStage> projectStages = projectStageRepository.findAllByProjectProjectId(projectId, sort);
+
+        // convert to list StageDto:
+        List<StageDto> stageDtos = projectStages.stream().map(
+                (projectStage) -> {
+
+                    Stage stage = projectStage.getStage();
+                    StageStatus stageStatus = projectStage.getStageStatus();
+
+                    StageDto stageDto = modelMapper.map(stage, StageDto.class);
+
+                    TeacherAccountResponse teacherAccountResponse = modelMapper.map(stage.getTeacher().getAccount(), TeacherAccountResponse.class);
+                    teacherAccountResponse.setTeacherCode(stage.getTeacher().getAccount().getCode());
+                    teacherAccountResponse.setDegree(
+                            modelMapper.map(stage.getTeacher().getDegree(), DegreeDto.class)
+                    );
+                    teacherAccountResponse.setFaculty(
+                            modelMapper.map(stage.getTeacher().getFaculty(), FacultyDto.class)
+                    );
+                    teacherAccountResponse.setLeader(stage.getTeacher().isLeader());
+
+                    stageDto.setTeacher(teacherAccountResponse);
+                    stageDto.setStageStatus(modelMapper.map(stageStatus, StageStatusDto.class));
+
+                    return stageDto;
+                }
+        ).collect(Collectors.toList());
+
+        return stageDtos;
     }
 
     private ProjectDto convertToProjectDto(Project project, StudentSemester studentSemester) {

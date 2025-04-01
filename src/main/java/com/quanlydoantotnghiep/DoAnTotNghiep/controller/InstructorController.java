@@ -89,6 +89,24 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.getProjectByStudentCodeAndSemester(studentCode, semesterId));
     }
 
+    // ++++++++ START 2 endpoints for progress manager:
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<?> getProjectByProjectId(
+            @PathVariable("projectId") Long projectId
+    ) {
+
+        return ResponseEntity.ok(instructorService.getProjectByProjectId(projectId));
+    }
+
+    @GetMapping("/projects/{projectId}/stages")
+    public ResponseEntity<?> getAllStagesByProject(
+            @PathVariable("projectId") Long projectId
+    ) {
+
+        return ResponseEntity.ok(instructorService.getAllStagesByProject(projectId));
+    }
+    // ++++++++ END 2 endpoints for progress manager:
+
     private AccountDto getAccountDtoByJwtToken(String jwtToken) {
 
         String onlyToken = jwtToken.substring(7);

@@ -31,6 +31,17 @@ public class InstructorProgressReviewController {
                 .body(progressReviewService.createProgressReview(createProgressReviewRequest, accountDto));
     }
 
+    @DeleteMapping("/progressReviewFile/{progressReviewFileId}")
+    public ResponseEntity<String> deleteProgressReviewFileById(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("progressReviewFileId") Long progressReviewFileId
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(progressReviewService.deleteProgressReviewFileById(progressReviewFileId, accountDto));
+    }
+
     private AccountDto getAccountDtoByJwtToken(String jwtToken) {
 
         String onlyToken = jwtToken.substring(7);
