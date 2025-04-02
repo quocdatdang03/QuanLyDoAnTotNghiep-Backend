@@ -1,12 +1,13 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.progressReport.ProgressReportDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.service.AccountService;
+import com.quanlydoantotnghiep.DoAnTotNghiep.service.InstructorProgressReportService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.ProgressReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/instructor/progressReports")
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class InstructorProgressReportController {
 
     private final ProgressReportService progressReportService;
+    private final AccountService accountService;
+    private final InstructorProgressReportService instructorProgressReportService;
 
     @GetMapping
     public ResponseEntity<?> getAllProgressReportsByProject(
@@ -23,5 +26,24 @@ public class InstructorProgressReportController {
     ) {
 
         return ResponseEntity.ok(progressReportService.getAllProgressReportByProject(projectId, stageId, sortDir));
+    }
+
+    @GetMapping("/{progressReportId}")
+    public ResponseEntity<ProgressReportDto> getProgressReportById(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("progressReportId") Long progressReportId
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(instructorProgressReportService.getProgressReportById(progressReportId, accountDto));
+    }
+
+    private AccountDto getAccountDtoByJwtToken(String jwtToken) {
+
+        String onlyToken = jwtToken.substring(7);
+        AccountDto accountDto = accountService.getByJwtToken(onlyToken);
+
+        return accountDto;
     }
 }

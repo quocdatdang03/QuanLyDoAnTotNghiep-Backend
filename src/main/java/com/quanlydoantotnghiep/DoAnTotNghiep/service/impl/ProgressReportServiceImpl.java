@@ -171,8 +171,8 @@ public class ProgressReportServiceImpl implements ProgressReportService {
         if(!student.getStudentId().equals(progressReport.getProjectStage().getProject().getStudentSemester().getStudent().getStudentId()))
             throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error when delete progressReport");
 
-        // check if progressReport is approved or had progressReviews -> don't allow delete
-        if(progressReport.isApproved() || progressReport.getProgressReviews().size() > 0)
+        // check if progressReport is approved or had progressReviews or is in completed stage ('Đã hoàn thành')-> don't allow delete
+        if(progressReport.isApproved() || progressReport.getProgressReviews().size() > 0 || progressReport.getProjectStage().getStageStatus().getStageStatusId()==3 )
             throw new ApiException(HttpStatus.BAD_REQUEST, "Can not delete this ProgressReport");
 
         progressReportRepository.deleteById(progressReportId);
