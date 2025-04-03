@@ -65,7 +65,7 @@ public class StageServiceImpl implements StageService {
                 .endDate(createStageRequest.getEndDate())
                 .semester(currentSemester)
                 .teacher(teacher)
-                .stageStatus(defaultStageStatus)
+                .stageStatus(defaultStageStatus) // default Stage Status is 1 ('Chưa mở')
                 .build();
 
         List<StageFile> stageFiles = createStageRequest.getStageFiles().stream()
@@ -99,10 +99,46 @@ public class StageServiceImpl implements StageService {
         // apply created stage to all projects of this teacher
         projects.forEach((item) -> {
 
+            // get final stage of specific project
+            ProjectStage latestProjectStage = projectStageRepository
+                    .findLatestStageOfProject(item.getProjectId())
+                        .stream().findFirst().orElse(null);
+
             ProjectStage projectStage = ProjectStage.builder()
                     .project(item)
                     .stage(stage)
-                    .stageStatus(defaultStageStatus).build();
+                    .build();
+
+            if(latestProjectStage==null)
+            {
+
+                // defaultStageStatus is 1 ('Chưa mở')
+                projectStage.setStageStatus(defaultStageStatus);
+            }
+            else {
+
+                // get stage status id of latest ProjectStage
+                Long stageStatusIdOfLatestProjectStage = latestProjectStage.getStageStatus().getStageStatusId();
+
+                if(stageStatusIdOfLatestProjectStage == 3)
+                {
+
+                    // If latestProjectStage have stageStatus = 3 ('Đã hoàn thành') -> then set stageStatus = 2 ('Đang thực hiện') for just created ProjectStage
+                    StageStatus inProgressStageStatus = stageStatusRepository.findById(2L)
+                            .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "StageStatus is not exists with given id: "+2));
+
+                    projectStage.setStageStatus(inProgressStageStatus);
+                }
+                else if(stageStatusIdOfLatestProjectStage == 1 || stageStatusIdOfLatestProjectStage == 2)
+                {
+
+                    // If latestProjectStage have stageStatus = 1 ('Chưa mở')  or 2 ('Đang thực hiện') -> then set stageStatus = 1 ('Chưa mở') for just created ProjectStage
+                    StageStatus unOpenedStageStatus = stageStatusRepository.findById(1L)
+                            .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "StageStatus is not exists with given id: "+1));
+
+                    projectStage.setStageStatus(unOpenedStageStatus);
+                }
+            }
 
             // save project stage:
             projectStageRepository.save(projectStage);
