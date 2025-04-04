@@ -19,6 +19,7 @@ public interface StageService {
     StageDto updateStageStatus(Long stageId, Long stageStatusId);
     List<StageStatusDto> getAllStageStatuses();
     List<StageDto> updateStageOrder(AccountDto accountDto, List<Long> newStageIds);
+    StageDto getCurrentStageByProject(Long projectId, AccountDto accountDto);
     // +++++++ method for role Teacher
 
     // +++++++ method for role Student

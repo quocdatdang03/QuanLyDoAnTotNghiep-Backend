@@ -326,6 +326,51 @@ public class StageServiceImpl implements StageService {
         return updatedStages;
     }
 
+    @Override
+    public StageDto getCurrentStageByProject(Long projectId, AccountDto accountDto) {
+
+        // get teacher for validation:
+        Teacher teacher = teacherRepository.findByAccount_AccountId(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given id: "+accountDto.getAccountId()));
+
+        // get Project for validation:
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        // check if this project does not belong to this teacher -> throw error
+        if(!project.getTeacher().getTeacherId().equals(teacher.getTeacherId()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error when get current stage by project");
+
+        // get ProjectStage having stageStatus = 2 ('Đang thực hiện')
+        ProjectStage projectStage = projectStageRepository.findInProgressProjectStageByProjectId(projectId);
+
+        // if ProjectStage having stageStatus = 2 is null -> get latest completed ProjectStage (having stageStatus = 3 ('Đang hoàn thành'))
+        if(projectStage==null){
+            projectStage = projectStageRepository.findLatestCompletedProjectStageByProjectId(projectId)
+                    .stream().findFirst().orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Current stage is unavailable"));
+        }
+
+        Stage currentStage = projectStage.getStage();
+
+        // convert to StageDto:
+        StageDto stageDto = modelMapper.map(currentStage, StageDto.class);
+
+        TeacherAccountResponse teacherAccountResponse = modelMapper.map(currentStage.getTeacher().getAccount(), TeacherAccountResponse.class);
+        teacherAccountResponse.setTeacherCode(currentStage.getTeacher().getAccount().getCode());
+        teacherAccountResponse.setDegree(
+                modelMapper.map(currentStage.getTeacher().getDegree(), DegreeDto.class)
+        );
+        teacherAccountResponse.setFaculty(
+                modelMapper.map(currentStage.getTeacher().getFaculty(), FacultyDto.class)
+        );
+        teacherAccountResponse.setLeader(currentStage.getTeacher().isLeader());
+
+        stageDto.setTeacher(teacherAccountResponse);
+        stageDto.setStageStatus(modelMapper.map(projectStage.getStageStatus(), StageStatusDto.class));
+
+        return stageDto;
+    }
+
     private StageDto convertToStageDto(Stage item) {
 
         StageDto stageDto = modelMapper.map(item, StageDto.class);

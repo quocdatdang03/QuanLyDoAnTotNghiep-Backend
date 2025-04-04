@@ -27,9 +27,13 @@ public class ChatMessage {
     @Column(name = "thoiGianGui",nullable = false)
     LocalDateTime timestamp;
 
+//    @ManyToOne
+//    @JoinColumn(name = "maPhongChat", nullable = false)
+//    ChatRoom chatRoom;
+
     @ManyToOne
-    @JoinColumn(name = "maPhongChat", nullable = false)
-    ChatRoom chatRoom;
+    @JoinColumn(name = "maDeTaiGiaiDoan", nullable = false)
+    ProjectStage projectStage;
 
     @ManyToOne
     @JoinColumn(name = "maNguoiGui", referencedColumnName = "maTaiKhoan", nullable = false)
@@ -39,5 +43,6 @@ public class ChatMessage {
     @JoinColumn(name = "maTinNhanGoc", referencedColumnName = "maTinNhan", nullable = true)
     ChatMessage parentMessage;
 
-    boolean isDeleted;
+    @Column(name = "daThuHoi")
+    boolean flagDelete;
 }

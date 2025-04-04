@@ -43,6 +43,17 @@ public class StudentProgressReportController {
         return ResponseEntity.ok(stageService.getStageById(stageId));
     }
 
+    @GetMapping("/project/{projectId}/currentStage")
+    public ResponseEntity<StageDto>  getCurrentStageByProject(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("projectId") Long projectId
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(studentStageService.getCurrentStageByProject(projectId, accountDto));
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllProgressReportsByProject(
             @RequestParam("projectId") Long projectId,

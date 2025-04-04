@@ -8,4 +8,5 @@ import java.util.List;
 public interface StudentStageService {
 
     List<StageDto> getAllStagesByProject(Long projectId, AccountDto accountDto);
+    StageDto getCurrentStageByProject(Long projectId, AccountDto accountDto);
 }

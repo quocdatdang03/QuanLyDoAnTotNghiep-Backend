@@ -38,6 +38,17 @@ public class InstructorStageController {
         return ResponseEntity.ok(stageService.getStageById(stageId));
     }
 
+    @GetMapping("/project/{projectId}/currentStage")
+    public ResponseEntity<StageDto>  getCurrentStageByProject(
+            @RequestHeader("Authorization") String jwtToken,
+            @PathVariable("projectId") Long projectId
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(stageService.getCurrentStageByProject(projectId, accountDto));
+    }
+
     @PostMapping("/creation")
     public ResponseEntity<StageDto> createStage(
             @RequestHeader("Authorization") String jwtToken,

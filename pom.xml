@@ -95,12 +95,12 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-		<!--&lt;!&ndash; WebSocket: SockJS and STOMP &ndash;&gt;
+		<!-- WebSocket: SockJS and STOMP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
--->
+
 		<!-- Spring Boot Devtools-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

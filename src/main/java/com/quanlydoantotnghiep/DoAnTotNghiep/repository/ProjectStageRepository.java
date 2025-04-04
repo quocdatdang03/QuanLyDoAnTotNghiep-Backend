@@ -1,6 +1,7 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.repository;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.ProjectStage;
+import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Stage;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,21 @@ public interface ProjectStageRepository extends JpaRepository<ProjectStage, Long
                 ORDER BY p.stage.stageOrder DESC
     """)
     List<ProjectStage> findLatestStageOfProject(@Param("projectId") Long projectId);
+
+    // get ProjectStage have stageStatus = 2 ('Đang thực hiện')
+    @Query("""
+        SELECT p FROM ProjectStage p
+            WHERE p.project.projectId = :projectId AND p.stageStatus.stageStatusId = 2
+    """)
+    ProjectStage findInProgressProjectStageByProjectId(@Param("projectId") Long projectId);
+
+    // get latest ProjectStage have stageStatus = 3 ('Đã hoàn thành)'
+    @Query("""
+        SELECT p FROM ProjectStage p
+            WHERE p.project.projectId = :projectId AND p.stageStatus.stageStatusId = 3
+            ORDER BY p.stage.stageOrder DESC
+    """)
+    List<ProjectStage> findLatestCompletedProjectStageByProjectId(@Param("projectId") Long projectId);
+
+
 }
