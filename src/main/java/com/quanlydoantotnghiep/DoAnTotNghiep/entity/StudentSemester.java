@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,6 +38,10 @@ public class StudentSemester {
     // Mỗi sinh viên trong học kỳ chỉ có 1 project
     @OneToOne(mappedBy = "studentSemester", cascade = CascadeType.ALL, orphanRemoval = true)
     Project project;
+
+    // Mỗi sinh viên trong học kỳ sẽ nhận được nhiều thông báo từ GVHD
+    @ManyToMany(mappedBy = "studentSemesters")
+    List<Notification> notifications = new ArrayList<>();
 
     @Column(name = "daXoa", nullable = false)
     boolean flagDelete;

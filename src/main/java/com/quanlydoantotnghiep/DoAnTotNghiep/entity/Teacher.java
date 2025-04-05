@@ -37,9 +37,9 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher")
     Set<ProgressReview> progressReviews;
 
-//    @OneToMany(mappedBy = "teacher")
-//    Set<Notification> notifications;
-//
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Notification> notifications = new HashSet<>();
+
 //    @OneToMany(mappedBy = "teacher")
 //    Set<Document> documents;
 
