@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @Entity
 @Table(name = "THONGBAO")
 public class Notification {
@@ -40,14 +41,14 @@ public class Notification {
     @JoinColumn(name = "maHocKy", referencedColumnName = "maHocKy", nullable = false)
     Semester semester;
 
-    // 1 thông báo được gửi cho nhiều sinh viên (được GVHD đó HD)
-    @ManyToMany
-    @JoinTable(
-            name = "THONGBAO_SINHVIEN",
-            joinColumns = @JoinColumn(name = "maThongBao"),
-            inverseJoinColumns = @JoinColumn(name = "maSinhVienHocKy")
-    )
-    List<StudentSemester> studentSemesters = new ArrayList<>();
+//    // 1 thông báo được gửi cho nhiều sinh viên (được GVHD đó HD)
+//    @ManyToMany
+//    @JoinTable(
+//            name = "THONGBAO_SINHVIEN",
+//            joinColumns = @JoinColumn(name = "maThongBao"),
+//            inverseJoinColumns = @JoinColumn(name = "maSinhVienHocKy")
+//    )
+//    List<StudentSemester> studentSemesters = new ArrayList<>();
 
     @Column(name = "ngayTao", updatable = false)
     LocalDateTime createdAt;

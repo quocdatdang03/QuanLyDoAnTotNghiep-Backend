@@ -39,9 +39,9 @@ public class StudentSemester {
     @OneToOne(mappedBy = "studentSemester", cascade = CascadeType.ALL, orphanRemoval = true)
     Project project;
 
-    // Mỗi sinh viên trong học kỳ sẽ nhận được nhiều thông báo từ GVHD
-    @ManyToMany(mappedBy = "studentSemesters")
-    List<Notification> notifications = new ArrayList<>();
+//    // Mỗi sinh viên trong học kỳ sẽ nhận được nhiều thông báo từ GVHD
+//    @ManyToMany(mappedBy = "studentSemesters")
+//    List<Notification> notifications = new ArrayList<>();
 
     @Column(name = "daXoa", nullable = false)
     boolean flagDelete;

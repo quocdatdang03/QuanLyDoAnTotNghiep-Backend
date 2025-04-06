@@ -10,5 +10,4 @@ public interface TeacherService {
 
     TeacherAccountResponse createAccountTeacher(TeacherAccountRequest request);
     TeacherAccountResponse getTeacherByTeacherCode(String teacherCode);
-
 }

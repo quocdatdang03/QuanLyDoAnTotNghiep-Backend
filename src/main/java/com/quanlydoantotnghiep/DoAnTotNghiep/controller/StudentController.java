@@ -1,6 +1,8 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.service.NotificationService;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentController {
 
     private final StudentService studentService;
+    private final NotificationService notificationService;
 
     @GetMapping("/{studentCode}")
     public ResponseEntity<StudentDto> getStudentByStudentCode(
@@ -23,5 +26,14 @@ public class StudentController {
 
 
         return ResponseEntity.ok(studentService.getStudentByStudentCode(studentCode));
+    }
+
+    // for getting instructor for get all notifications
+    @GetMapping("/{studentId}/instructor")
+    public ResponseEntity<TeacherAccountResponse> getInstructorByStudentIdInCurrentSemester(
+            @PathVariable("studentId") Long studentId
+    ) {
+
+        return ResponseEntity.ok(notificationService.getInstructorByStudentIdInCurrentSemester(studentId));
     }
 }
