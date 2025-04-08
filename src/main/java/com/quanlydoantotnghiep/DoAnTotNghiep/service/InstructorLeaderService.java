@@ -14,6 +14,8 @@ public interface InstructorLeaderService {
 
     ObjectResponse getAllStudentsHavingInstructor(String keyword, Long classId, String instructorCode, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir);
 
+    ObjectResponse getAllProjects(String keyword, Long semesterId, Long classId, Long projectStatusId, String instructorCode, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir);
+
     TeacherAccountResponse getInstructorByStudentCode(String studentCode);
 
     List<ClassDto> getAllClassesByFaculty(AccountDto accountDto);

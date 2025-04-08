@@ -6,6 +6,9 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.AccountDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectFileDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.project.ProjectStatusDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
@@ -35,6 +38,7 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
     private final SemesterRepository semesterRepository;
     private final StudentRepository studentRepository;
     private final StudentSemesterRepository studentSemesterRepository;
+    private final ProjectRepository projectRepository;
     private final TeacherRepository teacherRepository;
     private final AccountRepository accountRepository;
     private final ClassService classService;
@@ -93,6 +97,33 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
                 }).collect(Collectors.toList());
 
         return AppUtils.createObjectResponse(pageStudents, students);
+    }
+
+    // method dùng cho: tổng hợp đề tài ĐATN
+    @Override
+    public ObjectResponse getAllProjects(String keyword, Long semesterId, Long classId, Long projectStatusId, String instructorCode, AccountDto accountDto, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        Account account = accountRepository.findById(accountDto.getAccountId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Account is not exists with given id: "+accountDto.getAccountId()));
+
+        // Get faculty id of teacher leader
+        Long facultyId = account.getTeacher().getFaculty().getFacultyId();
+
+        // get current semester
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+
+        // create pageable
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        Page<Project> pageProjects = projectRepository.findAllProjectsByInstructorAndSemesterAndStatus(
+                keyword, semesterId!=null ? semesterId : currentSemester.getSemesterId(), facultyId,  classId, projectStatusId, instructorCode, pageable
+        );
+
+        List<ProjectDto> projectDtos = pageProjects.getContent().stream().map(
+                (project) -> convertToProjectDto(project, project.getStudentSemester())
+        ).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(pageProjects, projectDtos);
     }
 
     @Override
@@ -302,5 +333,41 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
         return studentDto;
     }
 
+    private ProjectDto convertToProjectDto(Project project, StudentSemester studentSemester) {
+
+        ProjectDto projectDto = ProjectDto.builder()
+                .projectId(project.getProjectId())
+                .projectName(project.getProjectName())
+                .projectContent(project.getProjectContent())
+                .projectFiles(
+                        project.getProjectFiles().stream()
+                                .map((item) -> modelMapper.map(item, ProjectFileDto.class)).collect(Collectors.toList()))
+                .projectStatus(modelMapper.map(project.getProjectStatus(), ProjectStatusDto.class))
+                .createdAt(project.getCreatedAt())
+                .build();
+
+        projectDto.setSemester(modelMapper.map(studentSemester.getSemester(), SemesterDto.class));
+
+        StudentDto studentDto = modelMapper.map(studentSemester.getStudent().getAccount(), StudentDto.class);
+        studentDto.setStudentCode(studentSemester.getStudent().getAccount().getCode());
+        studentDto.setStudentId(studentSemester.getStudent().getStudentId());
+        studentDto.setStudentClass(modelMapper.map(studentSemester.getStudent().getClazz(), ClassDto.class));
+
+
+        if(studentSemester.getInstructor()!=null)
+        {
+            TeacherAccountResponse teacherAccountResponse = modelMapper.map(studentSemester.getInstructor().getAccount(), TeacherAccountResponse.class);
+            teacherAccountResponse.setTeacherCode(studentSemester.getInstructor().getAccount().getCode());
+            teacherAccountResponse.setFaculty(modelMapper.map(studentSemester.getInstructor().getFaculty(), FacultyDto.class));
+            teacherAccountResponse.setDegree(modelMapper.map(studentSemester.getInstructor().getDegree(), DegreeDto.class));
+            teacherAccountResponse.setLeader(studentSemester.getInstructor().isLeader());
+
+            studentDto.setInstructor(teacherAccountResponse);
+        }
+
+        projectDto.setStudent(studentDto);
+
+        return projectDto;
+    }
 
 }

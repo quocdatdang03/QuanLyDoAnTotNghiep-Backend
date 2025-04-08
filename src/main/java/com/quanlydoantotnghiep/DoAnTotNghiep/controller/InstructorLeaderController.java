@@ -51,6 +51,26 @@ public class InstructorLeaderController {
         return ResponseEntity.ok(instructorLeaderService.getAllStudentsHavingInstructor(keyword, classId, instructorCode, accountDto, pageNumber, pageSize, sortBy, sortDir));
     }
 
+    // endpoint : cho tổng hợp đề tài ĐATN
+    @GetMapping("/projects")
+    public ResponseEntity<?> getAllProjects(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(name = "sortBy", required = false, defaultValue = AppConstant.PROJECT_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(name = "sortDir", required = false, defaultValue = "asc") String sortDir,
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(name = "semesterId", required = false) Long semesterId,
+            @RequestParam(name = "classId", required = false) Long classId,
+            @RequestParam(name = "projectStatusId", required = false) Long projectStatusId,
+            @RequestParam(name = "instructorCode", required = false) String instructorCode
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity.ok(instructorLeaderService.getAllProjects(keyword, semesterId, classId, projectStatusId, instructorCode, accountDto, pageNumber, pageSize, sortBy, sortDir));
+    }
+
     @GetMapping("/classes")
     public ResponseEntity<?> getAllClasses(
             @RequestHeader("Authorization") String jwtToken

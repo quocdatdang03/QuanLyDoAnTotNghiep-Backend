@@ -47,4 +47,26 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             @Param("semesterId") Long semesterId
     );
 
+    @Query("""
+        SELECT p FROM Project p
+            WHERE (LOWER(p.studentSemester.student.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(p.studentSemester.student.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(p.projectName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   )
+                AND (:semesterId IS NULL OR p.studentSemester.semester.semesterId = :semesterId)
+                AND p.studentSemester.student.clazz.faculty.facultyId = :facultyId
+                AND (:classId IS NULL OR p.studentSemester.student.clazz.classId = :classId)
+                AND (:projectStatusId IS NULL OR p.projectStatus.projectStatusId = :projectStatusId)
+                AND (:instructorCode IS NULL OR p.studentSemester.instructor.account.code = :instructorCode)
+    """)
+    Page<Project> findAllProjectsByInstructorAndSemesterAndStatus(
+            @Param("keyword") String keyword,
+            @Param("semesterId") Long semesterId,
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId,
+            @Param("projectStatusId") Long projectStatusId,
+            @Param("instructorCode") String instructorCode,
+            Pageable pageable
+    );
+
 }
