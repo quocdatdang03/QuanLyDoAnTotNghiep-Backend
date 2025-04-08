@@ -32,6 +32,14 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getAllNotificationByTeacherAndSemester(semesterId, teacherCode, pageNumber, pageSize));
     }
 
+    @GetMapping("/{notificationId}")
+    public ResponseEntity<?> getNotificationById(
+            @PathVariable("notificationId") Long notificationId
+    ) {
+
+        return ResponseEntity.ok(notificationService.getNotificationById(notificationId));
+    }
+
     private AccountDto getAccountDtoByJwtToken(String jwtToken) {
 
         String onlyToken = jwtToken.substring(7);

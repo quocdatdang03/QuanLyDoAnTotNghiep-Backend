@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    Page<Notification> findByTeacherTeacherIdAndSemesterSemesterId(Long teacherId, Long semesterId, Pageable pageable);
+    Page<Notification> findByTeacherTeacherIdAndSemesterSemesterIdAndFlagDeleteIsFalse(Long teacherId, Long semesterId, Pageable pageable);
 }

@@ -7,6 +7,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.notification.CreateNotificationRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.notification.NotificationDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.notification.UpdateNotificationRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Notification;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Semester;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.StudentSemester;
@@ -30,8 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class InstructorNotificationServiceImpl implements NotificationService
-{
+public class InstructorNotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final SemesterRepository semesterRepository;
@@ -68,6 +68,47 @@ public class InstructorNotificationServiceImpl implements NotificationService
     }
 
     @Override
+    public NotificationDto updateNotification(UpdateNotificationRequest updateNotificationRequest) {
+
+        Notification notification = notificationRepository.findById(updateNotificationRequest.getNotificationId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Notification is not exists with given id: "+updateNotificationRequest.getNotificationId()));
+
+        notification.setNotificationTitle(updateNotificationRequest.getNotificationTitle());
+        notification.setNotificationContent(updateNotificationRequest.getNotificationContent());
+
+        // save notification:
+        Notification savedNotification = notificationRepository.save(notification);
+
+        // convert to NotificationDto
+        return convertToNotificationDto(savedNotification);
+    }
+
+    @Override
+    public NotificationDto getNotificationById(Long notificationId) {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Notification is not exists with given id: "+notificationId));
+
+        // convert to NotificationDto
+        return convertToNotificationDto(notification);
+    }
+
+    @Override
+    public NotificationDto deleteNotification(Long notificationId) {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Notification is not exists with given id: "+notificationId));
+
+        notification.setFlagDelete(true);
+
+        // save notification:
+        Notification savedNotification = notificationRepository.save(notification);
+
+        // convert to NotificationDto
+        return convertToNotificationDto(savedNotification);
+    }
+
+    @Override
     public ObjectResponse getAllNotificationByTeacherAndSemester(Long semesterId, String teacherCode, int pageNumber, int pageSize) {
 
         // Sort by createdAt by descending
@@ -80,7 +121,7 @@ public class InstructorNotificationServiceImpl implements NotificationService
         // get current semester:
         Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
 
-        Page<Notification> notificationPage = notificationRepository.findByTeacherTeacherIdAndSemesterSemesterId(
+        Page<Notification> notificationPage = notificationRepository.findByTeacherTeacherIdAndSemesterSemesterIdAndFlagDeleteIsFalse(
                 teacher.getTeacherId(),
                 semesterId!=null ? semesterId : currentSemester.getSemesterId(),
                 pageable
