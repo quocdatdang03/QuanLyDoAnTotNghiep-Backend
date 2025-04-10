@@ -43,6 +43,6 @@ public class StudentSemester {
 //    @ManyToMany(mappedBy = "studentSemesters")
 //    List<Notification> notifications = new ArrayList<>();
 
-    @Column(name = "daXoa", nullable = false)
+    @Column(name = "trangThaiXoa", nullable = false)
     boolean flagDelete;
 }

@@ -16,7 +16,7 @@ public class StageFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "maTaiLieuDanhGia")
+    @Column(name = "maTaiLieuGiaiDoan")
     Long stageFileId;
 
     @Column(name = "tenTaiLieu", nullable = false)

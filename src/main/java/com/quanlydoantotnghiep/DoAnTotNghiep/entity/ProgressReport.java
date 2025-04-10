@@ -25,10 +25,10 @@ public class ProgressReport {
     @Column(name = "maBaoCao")
     Long progressReportId;
 
-    @Column(name = "tieuDeBaoCao",columnDefinition = "nvarchar(100)", nullable = false)
+    @Column(name = "tieuDeBaoCao",columnDefinition = "nvarchar(255)", nullable = false)
     String progressReportTitle;
 
-    @Column(name = "noiDungBaoCao", columnDefinition = "nvarchar(100)", nullable = false)
+    @Column(name = "noiDungBaoCao", columnDefinition = "nvarchar(255)", nullable = false)
     String progressReportContent;
 
     @Column(name = "trangThaiXetDuyet")
@@ -52,7 +52,7 @@ public class ProgressReport {
     @Column(name = "ngayCapNhat")
     LocalDateTime updatedAt;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
     @PrePersist

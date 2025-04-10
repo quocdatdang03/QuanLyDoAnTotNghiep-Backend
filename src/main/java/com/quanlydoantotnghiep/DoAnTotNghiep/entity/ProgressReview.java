@@ -51,7 +51,7 @@ public class ProgressReview {
     @Column(name = "ngayCapNhat")
     LocalDateTime updatedAt;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
     @PrePersist

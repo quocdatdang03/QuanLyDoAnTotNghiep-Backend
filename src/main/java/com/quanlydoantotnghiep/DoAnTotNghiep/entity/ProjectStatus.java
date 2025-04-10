@@ -30,6 +30,6 @@ public class ProjectStatus {
     @OneToMany(mappedBy = "projectStatus")
     List<Project> projects;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 }

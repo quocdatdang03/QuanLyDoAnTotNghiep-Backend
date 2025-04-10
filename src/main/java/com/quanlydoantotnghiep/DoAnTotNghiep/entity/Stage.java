@@ -26,7 +26,7 @@ public class Stage {
     @Column(name = "tenGiaiDoan", columnDefinition = "nvarchar(50)", nullable = false)
     String stageName;
 
-    @Column(name = "tieuDeGiaiDoan", nullable = false)
+    @Column(name = "tieuDeGiaiDoan", columnDefinition = "nvarchar(255)", nullable = false)
     String stageTitle;
 
     @Column(name = "noiDungGiaiDoan", columnDefinition = "text", nullable = false)
@@ -58,7 +58,7 @@ public class Stage {
     @JoinColumn(name = "maHocKy", referencedColumnName = "maHocKy")
     Semester semester;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
 

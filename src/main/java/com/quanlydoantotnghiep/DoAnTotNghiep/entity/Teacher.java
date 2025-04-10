@@ -60,7 +60,7 @@ public class Teacher {
     @Column(name = "truongBoMon")
     boolean isLeader;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
   /*

@@ -33,6 +33,6 @@ public class StudentTeacherProposal {
     @JoinColumn(name = "maHocKy", referencedColumnName = "maHocKy", nullable = false)
     Semester semester;
 
-    @Column(name = "daXoa", nullable = false)
+    @Column(name = "trangThaiXoa", nullable = false)
     boolean flagDelete;
 }

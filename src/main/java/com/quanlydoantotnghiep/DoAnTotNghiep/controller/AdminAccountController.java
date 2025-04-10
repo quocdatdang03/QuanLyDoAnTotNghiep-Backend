@@ -9,10 +9,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/accounts")
@@ -37,6 +34,15 @@ public class AdminAccountController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(teacherService.createAccountTeacher(teacherAccountRequest));
+    }
+
+    @PutMapping("/teacher/{teacherId}")
+    public ResponseEntity<TeacherAccountResponse> updateTeacherAccount(
+            @PathVariable Long teacherId,
+            @RequestBody TeacherAccountRequest teacherAccountRequest
+    ) {
+
+        return ResponseEntity.ok(teacherService.updateAccountTeacher(teacherId, teacherAccountRequest));
     }
 
 //    private AccountDto getAccountDtoByJwtToken(String jwtToken) {

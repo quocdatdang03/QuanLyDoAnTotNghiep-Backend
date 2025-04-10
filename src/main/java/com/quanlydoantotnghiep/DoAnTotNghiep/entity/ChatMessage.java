@@ -43,6 +43,6 @@ public class ChatMessage {
     @JoinColumn(name = "maTinNhanGoc", referencedColumnName = "maTinNhan", nullable = true)
     ChatMessage parentMessage;
 
-    @Column(name = "daThuHoi")
+    @Column(name = "trangThaiThuHoi")
     boolean flagDelete;
 }

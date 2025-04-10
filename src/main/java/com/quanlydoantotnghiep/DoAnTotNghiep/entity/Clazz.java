@@ -31,6 +31,6 @@ public class Clazz {
     @JoinColumn(name = "maKhoa", referencedColumnName = "maKhoa")
     Faculty faculty;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 }

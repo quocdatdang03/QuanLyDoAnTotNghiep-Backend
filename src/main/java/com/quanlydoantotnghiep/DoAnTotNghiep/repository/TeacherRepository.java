@@ -2,6 +2,8 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.repository;
 
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Teacher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,5 +26,17 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
             AND r.roleName <> 'ADMIN'
     """)
     List<Teacher> findByFacultyFacultyId(@Param("facultyId") Long facultyId, Sort sort);
+
+    @Query("""
+        SELECT t FROM Teacher t
+            WHERE (LOWER(t.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                    OR LOWER(t.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                  AND (:facultyId IS NULL OR t.faculty.facultyId = :facultyId)
+    """)
+    Page<Teacher> findAllTeachers(
+            @Param("keyword") String keyword,
+            @Param("facultyId") Long facultyId,
+            Pageable pageable
+    );
 
 }

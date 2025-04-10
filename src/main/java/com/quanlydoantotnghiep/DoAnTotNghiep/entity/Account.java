@@ -30,7 +30,7 @@ public class Account {
     @Column(name = "matKhau",columnDefinition = "varchar(255)", nullable = false)
     String password;
 
-    @Column(name = "maSo",columnDefinition = "varchar(50)", nullable = false, unique = true)
+    @Column(name = "maSo",columnDefinition = "varchar(14)", nullable = false, unique = true)
     private String code;
 
     @Column(name = "hoTen",columnDefinition = "nvarchar(50)", nullable = false)
@@ -39,13 +39,13 @@ public class Account {
     @Column(name = "ngaySinh",nullable = false)
     LocalDate dateOfBirth;
 
-    @Column(name = "soDienThoai",columnDefinition = "varchar(50)", nullable = false, unique = true)
+    @Column(name = "soDienThoai",columnDefinition = "varchar(11)", nullable = false, unique = true)
     String phoneNumber;
 
     @Column(name = "gioiTinh",nullable = false)
     boolean gender;
 
-    @Column(name = "diaChi",columnDefinition = "varchar(50)", nullable = false)
+    @Column(name = "diaChi",columnDefinition = "nvarchar(255)", nullable = false)
     String address;
 
     @Column(name = "hinhAnh",columnDefinition = "text", nullable = true)
@@ -76,9 +76,9 @@ public class Account {
     @Column(name = "thoiGianHetHanMaXacNhanDatLaiMK", nullable = true)
     LocalDateTime resetPasswordVerificationCodeExpiredAt;
 
-    @Column(name = "daKichHoat")
+    @Column(name = "trangThaiKichHoat")
     boolean enable;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 }

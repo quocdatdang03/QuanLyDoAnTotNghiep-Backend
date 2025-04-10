@@ -57,7 +57,7 @@ public class Project {
     @Column(name = "ngayCapNhat")
     LocalDateTime updatedAt;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
     @PrePersist

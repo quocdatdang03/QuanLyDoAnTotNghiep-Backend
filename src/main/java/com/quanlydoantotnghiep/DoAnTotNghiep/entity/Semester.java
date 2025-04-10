@@ -22,7 +22,7 @@ public class Semester {
     @Column(name = "maHocKy")
     Long semesterId;
 
-    @Column(name = "hocKy", unique = true)
+    @Column(name = "hocKy", columnDefinition = "varchar(50)", unique = true)
     String semesterName;
 
     @ManyToOne
@@ -32,10 +32,10 @@ public class Semester {
     @OneToMany(mappedBy = "semester")
     Set<StudentSemester> studentSemesters = new HashSet<>();
 
-    @Column(name = "laHocKyHienTai")
+    @Column(name = "trangThaiHocKyHienTai")
     boolean isCurrent;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
 }

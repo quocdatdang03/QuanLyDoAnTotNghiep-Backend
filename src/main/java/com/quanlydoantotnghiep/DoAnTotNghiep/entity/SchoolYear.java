@@ -21,12 +21,12 @@ public class SchoolYear {
     @Column(name = "maNamHoc")
     Long schoolYearId;
 
-    @Column(name = "namHoc", unique = true)
+    @Column(name = "namHoc", columnDefinition = "varchar(50)", unique = true)
     String schoolYearName;
 
     @OneToMany(mappedBy = "schoolYear")
     Set<Semester> semesters;
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 }

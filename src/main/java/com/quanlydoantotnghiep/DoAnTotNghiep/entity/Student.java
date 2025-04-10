@@ -42,7 +42,7 @@ public class Student {
     @OneToMany(mappedBy = "student")
     Set<StudentSemester> studentSemesters = new HashSet<>();
 
-    @Column(name = "daXoa")
+    @Column(name = "trangThaiXoa")
     boolean flagDelete;
 
 }
