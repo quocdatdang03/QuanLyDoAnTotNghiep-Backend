@@ -39,7 +39,7 @@ public class Student {
     Set<StudentTeacherProposal> proposedTeachers = new HashSet<>();
 
     //  1 sinh viên chỉ có thể được quản lý bởi 1 GVHD ở 1 học kỳ (sinh viên có thể có ở nhiều học kỳ)
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
     Set<StudentSemester> studentSemesters = new HashSet<>();
 
     @Column(name = "trangThaiXoa")
