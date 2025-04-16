@@ -4,6 +4,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ObjectResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.StudentAccountRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccountResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.UpdateEnableStatusStudentRequest;
 
 public interface StudentService {
 
@@ -11,4 +12,5 @@ public interface StudentService {
     StudentAccountResponse createAccountStudent(StudentAccountRequest request);
 
     ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
+    StudentDto updateEnableStatusOfStudent(UpdateEnableStatusStudentRequest request); // lock or unlock student account
 }

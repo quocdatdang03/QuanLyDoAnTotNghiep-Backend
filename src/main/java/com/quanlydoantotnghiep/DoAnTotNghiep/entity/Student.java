@@ -22,7 +22,7 @@ public class Student {
     @Column(name = "maSinhVien")
     Long studentId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "maTaiKhoan", referencedColumnName = "maTaiKhoan")
     Account account;
 

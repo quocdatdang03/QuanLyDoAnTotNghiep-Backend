@@ -1,7 +1,9 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.FilterStudentRequest;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.UpdateEnableStatusStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,14 @@ public class AdminStudentController {
                 keyword, classId, facultyId, semesterId, pageNumber, pageSize, sortBy, sortDir
         ));
     }
+
+    // LOCK or UNLOCK Student Account
+    @PatchMapping("/enableStatus")
+    public ResponseEntity<StudentDto> updateEnableStatusOfStudent(
+            @RequestBody UpdateEnableStatusStudentRequest request
+    ) {
+
+        return ResponseEntity.ok(studentService.updateEnableStatusOfStudent(request));
+    }
+
 }

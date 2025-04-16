@@ -8,6 +8,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.clazz.ClassDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.RoleDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.StudentAccountResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.instructor.RecommendedTeacherDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.UpdateEnableStatusStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
@@ -157,6 +158,43 @@ public class StudentServiceImpl implements StudentService {
 
         return AppUtils.createObjectResponse(pageStudents, students);
     }
+
+    // Lock or Unlock account of student
+    @Override
+    public StudentDto updateEnableStatusOfStudent(UpdateEnableStatusStudentRequest request) {
+
+        Student student = studentRepository.findByAccount_Code(request.getStudentCode())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given id: "+request.getStudentCode()));
+
+        Semester semester = semesterRepository.findById(request.getSemesterId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+request.getSemesterId()));
+
+        if(request.getEnableStatus().equals("lock"))
+            student.getAccount().setEnable(false);
+        else if(request.getEnableStatus().equals("unlock"))
+            student.getAccount().setEnable(true);
+
+        Student savedStudent = studentRepository.save(student);
+
+        // convert to StudentDto
+        return convertToStudentDto(savedStudent, request.getSemesterId());
+    }
+
+    private StudentDto convertToStudentDto(Student student, Long semesterId) {
+
+        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+        studentDto.setStudentCode(student.getAccount().getCode());
+        studentDto.setStudentId(student.getStudentId());
+        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+
+        StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), semesterId);
+        studentDto.setSemester(
+                modelMapper.map(studentSemester.getSemester(), SemesterDto.class)
+        );
+
+        return studentDto;
+    }
+
 
     private StudentAccountResponse getStudentAccountResponse(Student student, Account account) {
         StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);
