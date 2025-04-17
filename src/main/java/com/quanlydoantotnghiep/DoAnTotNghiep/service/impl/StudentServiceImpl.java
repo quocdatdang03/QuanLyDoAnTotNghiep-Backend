@@ -89,13 +89,13 @@ public class StudentServiceImpl implements StudentService {
         Set<Role> roles = new HashSet<>(roleRepository.findAllById(request.getRoleIds()));
 
         if (accountRepository.existsByEmail(request.getEmail()))
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Email is already used by another account");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Email đã được sử dụng bởi tài khoản khác");
 
         if (accountRepository.existsByCode(request.getStudentCode()))
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Student code is already used by another account");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Mã sinh viên đã được sử dụng bởi tài khoản khác");
 
         if (accountRepository.existsByPhoneNumber(request.getPhoneNumber()))
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Phone number is already used by another account");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Số điện thoại đã được sử dụng bởi tài khoản khác");
 
         Account account = Account.builder()
                 .code(request.getStudentCode())
