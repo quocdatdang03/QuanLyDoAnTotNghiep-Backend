@@ -138,4 +138,19 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        SELECT s FROM Student s
+            WHERE (LOWER(s.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) 
+                    OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                  )
+                  AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
+                  AND (:classId IS NULL OR s.clazz.classId = :classId)
+    """)
+    Page<Student> findAllStudents(
+            @Param("keyword") String keyword,
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId,
+            Pageable pageable
+    );
+
 }

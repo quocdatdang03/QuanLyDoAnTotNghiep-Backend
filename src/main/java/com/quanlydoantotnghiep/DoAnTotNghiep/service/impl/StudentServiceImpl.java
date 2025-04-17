@@ -159,6 +159,26 @@ public class StudentServiceImpl implements StudentService {
         return AppUtils.createObjectResponse(pageStudents, students);
     }
 
+    @Override
+    public ObjectResponse getAllStudents(String keyword, Long classId, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        Page<Student> pageStudents = studentRepository.findAllStudents(keyword, facultyId, classId, pageable);
+
+        List<StudentDto> students = pageStudents.getContent().stream()
+                .map((student) -> {
+                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+                    studentDto.setStudentCode(student.getAccount().getCode());
+                    studentDto.setStudentId(student.getStudentId());
+                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+
+                    return studentDto;
+                }).collect(Collectors.toList());
+
+        return AppUtils.createObjectResponse(pageStudents, students);
+    }
+
     // Lock or Unlock account of student
     @Override
     public StudentDto updateEnableStatusOfStudent(UpdateEnableStatusStudentRequest request) {

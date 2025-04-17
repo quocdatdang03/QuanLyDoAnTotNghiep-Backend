@@ -17,6 +17,25 @@ public class AdminStudentController {
 
     private final StudentService studentService;
 
+
+    // method get all students for managing student account
+    @GetMapping
+    public ResponseEntity<?> getAllStudents(
+            @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(name = "sortBy", required = false, defaultValue = AppConstant.STUDENT_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(name = "sortDir", required = false, defaultValue = "asc") String sortDir,
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(name = "classId", required = false) Long classId,
+            @RequestParam(name = "facultyId", required = false) Long facultyId
+    ) {
+
+        return ResponseEntity.ok(studentService.getAllStudents(
+                keyword, classId, facultyId, pageNumber, pageSize, sortBy, sortDir
+        ));
+    }
+
+    // method filter all students for managing student semester (register student)
     @GetMapping("/filter")
     public ResponseEntity<?> filterAllStudents(
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
