@@ -12,6 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class UpdateEnableStatusStudentRequest {
 
     String studentCode;
-    Long semesterId;
     String enableStatus; // lock, unlock
 }

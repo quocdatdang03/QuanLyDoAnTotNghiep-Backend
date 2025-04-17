@@ -186,9 +186,6 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findByAccount_Code(request.getStudentCode())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given id: "+request.getStudentCode()));
 
-        Semester semester = semesterRepository.findById(request.getSemesterId())
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+request.getSemesterId()));
-
         if(request.getEnableStatus().equals("lock"))
             student.getAccount().setEnable(false);
         else if(request.getEnableStatus().equals("unlock"))
@@ -197,20 +194,10 @@ public class StudentServiceImpl implements StudentService {
         Student savedStudent = studentRepository.save(student);
 
         // convert to StudentDto
-        return convertToStudentDto(savedStudent, request.getSemesterId());
-    }
-
-    private StudentDto convertToStudentDto(Student student, Long semesterId) {
-
         StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
         studentDto.setStudentCode(student.getAccount().getCode());
         studentDto.setStudentId(student.getStudentId());
         studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
-
-        StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), semesterId);
-        studentDto.setSemester(
-                modelMapper.map(studentSemester.getSemester(), SemesterDto.class)
-        );
 
         return studentDto;
     }
