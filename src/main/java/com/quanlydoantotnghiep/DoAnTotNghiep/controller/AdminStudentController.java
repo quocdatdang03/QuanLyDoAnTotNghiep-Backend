@@ -2,11 +2,13 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.AddStudentSemesterRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.FilterStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.student.UpdateEnableStatusStudentRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ public class AdminStudentController {
     private final StudentService studentService;
 
 
-    // method get all students for managing student account
+    // START methods for managing student account
     @GetMapping
     public ResponseEntity<?> getAllStudents(
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
@@ -35,7 +37,16 @@ public class AdminStudentController {
         ));
     }
 
-    // method filter all students for managing student semester (register student)
+    @PatchMapping("/enableStatus")
+    public ResponseEntity<StudentDto> updateEnableStatusOfStudent(
+            @RequestBody UpdateEnableStatusStudentRequest request
+    ) {
+
+        return ResponseEntity.ok(studentService.updateEnableStatusOfStudent(request));
+    }
+    // END methods for managing student account
+
+    // START methods for managing student semester (register student)
     @GetMapping("/filter")
     public ResponseEntity<?> filterAllStudents(
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
@@ -53,7 +64,7 @@ public class AdminStudentController {
         ));
     }
 
-    // method get all student not enrolled in current semester for managing student semester (register student)
+
     @GetMapping("/not-enrolled")
     public ResponseEntity<?> getAllStudentNotEnrolledInCurrentSemester(
             @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
@@ -68,13 +79,16 @@ public class AdminStudentController {
         return ResponseEntity.ok(studentService.getAllStudentsNotEnrolledInCurrentSemester(keyword, classId, facultyId, pageNumber, pageSize, sortBy, sortDir));
     }
 
-    // LOCK or UNLOCK Student Account
-    @PatchMapping("/enableStatus")
-    public ResponseEntity<StudentDto> updateEnableStatusOfStudent(
-            @RequestBody UpdateEnableStatusStudentRequest request
+    @PostMapping("/studentSemester")
+    public ResponseEntity<?> addStudentSemesters(
+            @RequestBody AddStudentSemesterRequest addStudentSemesterRequest
     ) {
 
-        return ResponseEntity.ok(studentService.updateEnableStatusOfStudent(request));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(studentService.createStudentSemesters(addStudentSemesterRequest.getCurrentSemesterId(), addStudentSemesterRequest.getStudentCodeList()));
     }
+
+    // END methods for managing student semester (register student)
 
 }

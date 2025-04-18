@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.HashSet;
@@ -259,6 +260,37 @@ public class StudentServiceImpl implements StudentService {
         studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
 
         return studentDto;
+    }
+
+    @Transactional
+    @Override
+    public String createStudentSemesters(Long semesterId, List<String> studentCodeList) {
+
+        List<Student> students = studentRepository.findAllByAccount_CodeIn(studentCodeList);
+
+        Semester semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+semesterId));
+
+        // add each student with semester
+        students.forEach((student) -> {
+
+            // check if already exists studentSemester -> throw error
+            StudentSemester existedStudentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), semesterId);
+            if(existedStudentSemester!=null)
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Xảy ra lỗi trong quá trình thêm sinh viên vào học kỳ ĐATN hiện tại");
+//                throw new ApiException(HttpStatus.BAD_REQUEST, "This studentSemester is already existed (studentId: "+student.getStudentId()+" - semesterId: "+semesterId+")");
+
+            StudentSemester studentSemester = StudentSemester.builder()
+                    .semester(semester)
+                    .student(student)
+                    .flagDelete(false)
+                    .build();
+
+            // save studentSemester
+            studentSemesterRepository.save(studentSemester);
+        });
+
+        return "Adding studentSemesters successfully";
     }
 
     private StudentDto convertToStudentDto(Student student) {
