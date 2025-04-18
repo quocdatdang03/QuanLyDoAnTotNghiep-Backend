@@ -58,9 +58,11 @@ public class StudentServiceImpl implements StudentService {
         studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
 
         StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), currentSemester.getSemesterId());
-        studentDto.setSemester(
-                modelMapper.map(studentSemester.getSemester(), SemesterDto.class)
-        );
+        if(studentSemester!=null) {
+            studentDto.setSemester(
+                    modelMapper.map(studentSemester.getSemester(), SemesterDto.class)
+            );
+        }
 
         studentDto.setRecommendedTeachers(
                 student.getProposedTeachers().stream()
@@ -128,7 +130,51 @@ public class StudentServiceImpl implements StudentService {
         Student savedStudent = studentRepository.save(student);
 
         // convert to StudentAccountResponse
-        return getStudentAccountResponse(savedStudent, savedAccount);
+        return convertToStudentAccountResponse(savedStudent, savedAccount);
+    }
+
+    @Override
+    public StudentAccountResponse updateAccountStudent(Long studentId, StudentAccountRequest request) {
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given id: "+studentId));
+
+        Account account = student.getAccount();
+
+        // validation
+        if(!account.getEmail().equals(request.getEmail()) && accountRepository.existsByEmail(request.getEmail()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Email đã được sử dụng bởi tài khoản khác");
+
+        if(!account.getCode().equals(request.getStudentCode()) && accountRepository.existsByCode(request.getStudentCode()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Mã sinh viên đã được sử dụng bởi tài khoản khác");
+
+        if(!account.getPhoneNumber().equals(request.getPhoneNumber()) && accountRepository.existsByPhoneNumber(request.getPhoneNumber()))
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Số điện thoại đã được sử dụng bởi tài khoản khác");
+
+        // update account
+        account.setCode(request.getStudentCode());
+        account.setEmail(request.getEmail());
+        account.setFullName(request.getFullName());
+        account.setDateOfBirth(request.getDateOfBirth());
+        account.setPhoneNumber(request.getPhoneNumber());
+        account.setGender(request.isGender());
+        account.setAddress(request.getAddress());
+        account.setImage(request.getImage());
+        // check if field password is empty -> retrieve old password - else -> set new password
+        if(request.getPassword() != null && !request.getPassword().trim().isEmpty())
+            account.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Account updatedAccount = accountRepository.save(account);
+
+        // update student
+        Clazz clazz = classRepository.findById(request.getClassId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Class is not exists with given id: "+request.getClassId()));
+
+        student.setClazz(clazz);
+        Student updatedStudent = studentRepository.save(student);
+
+        // convert to StudentAccountResponse
+        return convertToStudentAccountResponse(updatedStudent, updatedAccount);
     }
 
     @Override
@@ -203,7 +249,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
 
-    private StudentAccountResponse getStudentAccountResponse(Student student, Account account) {
+    private StudentAccountResponse convertToStudentAccountResponse(Student student, Account account) {
         StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);
         studentAccountResponse.setStudentCode(account.getCode());
         studentAccountResponse.setStudentId(student.getStudentId());

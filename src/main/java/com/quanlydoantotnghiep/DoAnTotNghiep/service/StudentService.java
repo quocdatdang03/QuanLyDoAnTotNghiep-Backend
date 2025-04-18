@@ -10,6 +10,7 @@ public interface StudentService {
 
     StudentDto getStudentByStudentCode(String studentCode);
     StudentAccountResponse createAccountStudent(StudentAccountRequest request);
+    StudentAccountResponse updateAccountStudent(Long studentId, StudentAccountRequest request);
 
     ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
     ObjectResponse getAllStudents(String keyword, Long classId, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir);

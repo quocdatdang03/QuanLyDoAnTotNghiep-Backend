@@ -45,6 +45,15 @@ public class AdminAccountController {
         return ResponseEntity.ok(teacherService.updateAccountTeacher(teacherId, teacherAccountRequest));
     }
 
+    @PutMapping("/student/{studentId}")
+    public ResponseEntity<StudentAccountResponse> updateStudentAccount(
+            @PathVariable("studentId") Long studentId,
+            @RequestBody StudentAccountRequest studentAccountRequest
+    ) {
+
+        return ResponseEntity.ok(studentService.updateAccountStudent(studentId, studentAccountRequest));
+    }
+
 //    private AccountDto getAccountDtoByJwtToken(String jwtToken) {
 //
 //        String onlyToken = jwtToken.substring(7);
