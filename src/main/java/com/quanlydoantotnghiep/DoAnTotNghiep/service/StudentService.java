@@ -14,5 +14,6 @@ public interface StudentService {
 
     ObjectResponse filterAllStudents(String keyword, Long classId, Long facultyId, Long semesterId, int pageNumber, int pageSize, String sortBy, String sortDir);
     ObjectResponse getAllStudents(String keyword, Long classId, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir);
+    ObjectResponse getAllStudentsNotEnrolledInCurrentSemester(String keyword, Long classId, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir);
     StudentDto updateEnableStatusOfStudent(UpdateEnableStatusStudentRequest request); // lock or unlock student account
 }

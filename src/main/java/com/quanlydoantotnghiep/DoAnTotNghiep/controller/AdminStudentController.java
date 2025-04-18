@@ -53,6 +53,21 @@ public class AdminStudentController {
         ));
     }
 
+    // method get all student not enrolled in current semester for managing student semester (register student)
+    @GetMapping("/not-enrolled")
+    public ResponseEntity<?> getAllStudentNotEnrolledInCurrentSemester(
+            @RequestParam(name = "pageNumber", required = false, defaultValue = AppConstant.DEFAULT_PAGE_NUMBER) int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(name = "sortBy", required = false, defaultValue = AppConstant.STUDENT_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(name = "sortDir", required = false, defaultValue = "asc") String sortDir,
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(name = "classId", required = false) Long classId,
+            @RequestParam(name = "facultyId", required = false) Long facultyId
+    ) {
+
+        return ResponseEntity.ok(studentService.getAllStudentsNotEnrolledInCurrentSemester(keyword, classId, facultyId, pageNumber, pageSize, sortBy, sortDir));
+    }
+
     // LOCK or UNLOCK Student Account
     @PatchMapping("/enableStatus")
     public ResponseEntity<StudentDto> updateEnableStatusOfStudent(

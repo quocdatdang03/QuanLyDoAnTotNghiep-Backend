@@ -213,14 +213,27 @@ public class StudentServiceImpl implements StudentService {
         Page<Student> pageStudents = studentRepository.findAllStudents(keyword, facultyId, classId, pageable);
 
         List<StudentDto> students = pageStudents.getContent().stream()
-                .map((student) -> {
-                    StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
-                    studentDto.setStudentCode(student.getAccount().getCode());
-                    studentDto.setStudentId(student.getStudentId());
-                    studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+                .map((student) -> convertToStudentDto(student))
+                    .collect(Collectors.toList());
 
-                    return studentDto;
-                }).collect(Collectors.toList());
+        return AppUtils.createObjectResponse(pageStudents, students);
+    }
+
+    @Override
+    public ObjectResponse getAllStudentsNotEnrolledInCurrentSemester(String keyword, Long classId, Long facultyId, int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
+
+        // get current semester
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+        if(currentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error when current semester is null");
+
+        Page<Student> pageStudents = studentRepository.findAllStudentsNotInCurrentSemester(keyword, currentSemester.getSemesterId(),  facultyId, classId, pageable);
+
+        List<StudentDto> students = pageStudents.getContent().stream()
+                .map((student) -> convertToStudentDto(student))
+                    .collect(Collectors.toList());
 
         return AppUtils.createObjectResponse(pageStudents, students);
     }
@@ -248,6 +261,15 @@ public class StudentServiceImpl implements StudentService {
         return studentDto;
     }
 
+    private StudentDto convertToStudentDto(Student student) {
+
+        StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);
+        studentDto.setStudentCode(student.getAccount().getCode());
+        studentDto.setStudentId(student.getStudentId());
+        studentDto.setStudentClass(modelMapper.map(student.getClazz(), ClassDto.class));
+
+        return studentDto;
+    }
 
     private StudentAccountResponse convertToStudentAccountResponse(Student student, Account account) {
         StudentAccountResponse studentAccountResponse = modelMapper.map(account, StudentAccountResponse.class);
