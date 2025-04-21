@@ -51,6 +51,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
              AND (:classId IS NULL OR s.clazz.classId = :classId)
              AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
              AND stm.semester.semesterId = :semesterId
+             and stm.flagDelete = false
     """)
     Page<Student> findAllStudentsByKeywordAndSemesterAndFacultyAndClass(
              @Param("keyword") String keyword,

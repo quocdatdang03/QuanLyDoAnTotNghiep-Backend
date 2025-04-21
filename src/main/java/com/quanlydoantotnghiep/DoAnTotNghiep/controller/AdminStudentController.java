@@ -89,6 +89,15 @@ public class AdminStudentController {
                 .body(studentService.createStudentSemesters(addStudentSemesterRequest.getCurrentSemesterId(), addStudentSemesterRequest.getStudentCodeList()));
     }
 
+    @DeleteMapping("/studentSemester")
+    public ResponseEntity<?> deleteStudentSemester(
+            @RequestParam(name = "studentId") Long studentId,
+            @RequestParam(name = "semesterId") Long semesterId
+    ) {
+
+        return ResponseEntity.ok(studentService.deleteStudentSemester(studentId, semesterId));
+    }
+
     // END methods for managing student semester (register student)
 
 }

@@ -293,6 +293,21 @@ public class StudentServiceImpl implements StudentService {
         return "Adding studentSemesters successfully";
     }
 
+    @Override
+    public String deleteStudentSemester(Long studentId, Long semesterId) {
+
+        StudentSemester studentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(studentId, semesterId);
+        if(studentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "StudentSemester is not exists with given studentId: "+studentId +" and semesterId: "+semesterId);
+
+        // delete studentSemester
+        studentSemester.setFlagDelete(true);
+
+        studentSemesterRepository.save(studentSemester);
+
+        return "StudentSemester was deleted successfully";
+    }
+
     private StudentDto convertToStudentDto(Student student) {
 
         StudentDto studentDto = modelMapper.map(student.getAccount(), StudentDto.class);

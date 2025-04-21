@@ -21,4 +21,5 @@ public interface StudentService {
     StudentDto updateEnableStatusOfStudent(UpdateEnableStatusStudentRequest request); // lock or unlock student account
 
     String createStudentSemesters(Long semesterId, List<String> studentCodeList);
+    String deleteStudentSemester(Long studentId, Long semesterId);
 }
