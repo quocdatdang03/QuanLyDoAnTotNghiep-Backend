@@ -274,20 +274,26 @@ public class StudentServiceImpl implements StudentService {
         // add each student with semester
         students.forEach((student) -> {
 
-            // check if already exists studentSemester -> throw error
+            // check if already exists studentSemester with flagDelete=false -> throw error
             StudentSemester existedStudentSemester = studentSemesterRepository.findByStudentStudentIdAndSemesterSemesterId(student.getStudentId(), semesterId);
-            if(existedStudentSemester!=null)
+            if(existedStudentSemester!=null && !existedStudentSemester.isFlagDelete())
                 throw new ApiException(HttpStatus.BAD_REQUEST, "Xảy ra lỗi trong quá trình thêm sinh viên vào học kỳ ĐATN hiện tại");
-//                throw new ApiException(HttpStatus.BAD_REQUEST, "This studentSemester is already existed (studentId: "+student.getStudentId()+" - semesterId: "+semesterId+")");
 
-            StudentSemester studentSemester = StudentSemester.builder()
-                    .semester(semester)
-                    .student(student)
-                    .flagDelete(false)
-                    .build();
+            // check if already exists studentSemester with flagDelete=true -> set flagDelete=false
+            // else -> create new studentSemester
+            if (existedStudentSemester != null) {
+                existedStudentSemester.setFlagDelete(false);
+                studentSemesterRepository.save(existedStudentSemester);
+            } else {
+                StudentSemester studentSemester = StudentSemester.builder()
+                        .semester(semester)
+                        .student(student)
+                        .flagDelete(false)
+                        .build();
 
-            // save studentSemester
-            studentSemesterRepository.save(studentSemester);
+                // save studentSemester
+                studentSemesterRepository.save(studentSemester);
+            }
         });
 
         return "Adding studentSemesters successfully";

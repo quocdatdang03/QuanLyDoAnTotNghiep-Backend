@@ -160,7 +160,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                     OR LOWER(s.account.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
                   )
                   AND NOT EXISTS (
-                    SELECT 1 FROM s.studentSemesters stm WHERE stm.semester.semesterId = :currentSemesterId
+                    SELECT 1 FROM s.studentSemesters stm WHERE stm.semester.semesterId = :currentSemesterId and stm.flagDelete = false
                   )
                   AND (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
                   AND (:classId IS NULL OR s.clazz.classId = :classId)
