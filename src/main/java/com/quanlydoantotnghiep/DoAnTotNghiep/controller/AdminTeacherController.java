@@ -1,10 +1,10 @@
 package com.quanlydoantotnghiep.DoAnTotNghiep.controller;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.constant.AppConstant;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
-import com.quanlydoantotnghiep.DoAnTotNghiep.service.StudentService;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.teacher.UpdateEnableStatusTeacherRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.TeacherService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +37,13 @@ public class AdminTeacherController {
     ) {
 
         return ResponseEntity.ok(teacherService.getTeacherByTeacherCode(teacherCode));
+    }
+
+    @PatchMapping("/enableStatus")
+    public ResponseEntity<TeacherAccountResponse> updateEnableStatusOfStudent(
+            @RequestBody UpdateEnableStatusTeacherRequest request
+    ) {
+
+        return ResponseEntity.ok(teacherService.updateEnableStatusOfTeacher(request));
     }
 }

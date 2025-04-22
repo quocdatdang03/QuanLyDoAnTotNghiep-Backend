@@ -22,7 +22,7 @@ public class Teacher {
     @Column(name = "maGiangVien")
     Long teacherId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "maTaiKhoan", referencedColumnName = "maTaiKhoan")
     Account account;
 

@@ -5,6 +5,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.FacultyDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.ObjectResponse;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.request.TeacherAccountRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.account.response.TeacherAccountResponse;
+import com.quanlydoantotnghiep.DoAnTotNghiep.dto.teacher.UpdateEnableStatusTeacherRequest;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.TeacherService;
@@ -161,6 +162,23 @@ public class TeacherServiceImpl implements TeacherService {
 
         // convert to TeacherAccountResponse
         return convertToTeacherAccountResponse(teacher);
+    }
+
+    @Override
+    public TeacherAccountResponse updateEnableStatusOfTeacher(UpdateEnableStatusTeacherRequest request) {
+
+        Teacher teacher = teacherRepository.findByAccount_Code(request.getTeacherCode())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+request.getTeacherCode()));
+
+        if(request.getEnableStatus().equals("lock"))
+            teacher.getAccount().setEnable(false);
+        else if(request.getEnableStatus().equals("unlock"))
+            teacher.getAccount().setEnable(true);
+
+        Teacher savedTeacher = teacherRepository.save(teacher);
+
+        // convert to TeacherAccountResponse
+        return convertToTeacherAccountResponse(savedTeacher);
     }
 
     @Override
