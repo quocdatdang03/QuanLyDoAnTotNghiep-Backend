@@ -39,4 +39,19 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        SELECT t FROM Teacher t
+            JOIN t.account a 
+            JOIN a.roles r
+            WHERE (LOWER(t.account.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                        OR LOWER(t.account.code) LIKE LOWER(CONCAT('%', :keyword, '%')))
+                      AND t.faculty.facultyId = :facultyId
+                      AND r.roleName <> 'ADMIN'
+    """)
+    Page<Teacher> findAllTeachersByFaculty(
+            @Param("keyword") String keyword,
+            @Param("facultyId") Long facultyId,
+            Pageable pageable
+    );
+
 }
