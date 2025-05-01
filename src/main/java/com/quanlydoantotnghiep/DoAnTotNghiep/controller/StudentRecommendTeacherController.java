@@ -25,7 +25,7 @@ public class StudentRecommendTeacherController {
             @RequestParam(name = "pageSize", required = false, defaultValue = AppConstant.DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(name = "sortBy", required = false, defaultValue = AppConstant.TEACHER_DEFAULT_SORT_BY) String sortBy,
             @RequestParam(name = "sortDir", required = false, defaultValue = "asc") String sortDir,
-            @RequestParam(name = "sortDir", required = false, defaultValue = "") String keyword
+            @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword
     ) {
 
         AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
