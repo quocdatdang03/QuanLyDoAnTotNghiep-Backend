@@ -18,10 +18,10 @@ public class Clazz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "maLopSH")
+    @Column(name = "maLopSinhHoat")
     Long classId;
 
-    @Column(name = "tenLopSH",columnDefinition = "varchar(50)", nullable = false)
+    @Column(name = "tenLopSinhHoat",columnDefinition = "varchar(50)", nullable = false)
     String className;
 
     @OneToMany(mappedBy = "clazz")

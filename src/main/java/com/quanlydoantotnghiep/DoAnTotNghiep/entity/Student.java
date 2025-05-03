@@ -27,7 +27,7 @@ public class Student {
     Account account;
 
     @ManyToOne
-    @JoinColumn(name = "maLopSH", referencedColumnName = "maLopSH")
+    @JoinColumn(name = "maLopSinhHoat", referencedColumnName = "maLopSinhHoat")
     Clazz clazz;
 
 //    // 1 sinh viên nhận được nhiều thông báo từ GVHD

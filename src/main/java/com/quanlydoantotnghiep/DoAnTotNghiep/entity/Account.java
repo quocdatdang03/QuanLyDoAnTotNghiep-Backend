@@ -27,7 +27,7 @@ public class Account {
     @Column(columnDefinition = "varchar(255)", nullable = false, unique = true)
     String email;
 
-    @Column(name = "matKhau",columnDefinition = "varchar(255)", nullable = false)
+    @Column(name = "matKhau",columnDefinition = "varchar(60)", nullable = false)
     String password;
 
     @Column(name = "maSo",columnDefinition = "varchar(14)", nullable = false, unique = true)
