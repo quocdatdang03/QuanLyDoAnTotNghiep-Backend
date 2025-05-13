@@ -13,10 +13,7 @@ import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.stage.StageStatusDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.entity.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.exception.ApiException;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.ProgressReportFileRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.ProgressReportRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.ProjectStageRepository;
-import com.quanlydoantotnghiep.DoAnTotNghiep.repository.StudentRepository;
+import com.quanlydoantotnghiep.DoAnTotNghiep.repository.*;
 import com.quanlydoantotnghiep.DoAnTotNghiep.service.ProgressReportService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -35,6 +32,7 @@ public class ProgressReportServiceImpl implements ProgressReportService {
     private final ProjectStageRepository projectStageRepository;
     private final StudentRepository studentRepository;
     private final ProgressReportFileRepository progressReportFileRepository;
+    private final ProjectRepository projectRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -44,6 +42,10 @@ public class ProgressReportServiceImpl implements ProgressReportService {
         Student student = studentRepository.findByAccount_AccountId(accountDto.getAccountId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given accountId: "+accountDto.getAccountId()));
 
+        // get project
+        Project project = projectRepository.findById(createProgressReportRequest.getProjectId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+createProgressReportRequest.getProjectId()));
+
         // get ProjectStage:
         ProjectStage projectStage = projectStageRepository.findByStageStageIdAndProjectProjectId(createProgressReportRequest.getStageId(), createProgressReportRequest.getProjectId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "ProjectStage is not exists with given stageId:"+createProgressReportRequest.getStageId()+" and projectId:"+createProgressReportRequest.getProjectId()));
@@ -51,6 +53,10 @@ public class ProgressReportServiceImpl implements ProgressReportService {
         // check if this project does not belong to student -> throw error
         if(!student.getStudentId().equals(projectStage.getProject().getStudentSemester().getStudent().getStudentId()))
             throw new ApiException(HttpStatus.BAD_REQUEST, "Occur error when create progressReport");
+
+        // check if projectStatus != 2 ('Đang thực hiện') and != 3 ('Hoàn thành') -> throw error
+        if(project.getProjectStatus().getProjectStatusId()!=2 && project.getProjectStatus().getProjectStatusId()!=3)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Project with this status cannot create progressReport");
 
         // Check if stageStatus != 2 ('Đang thực hiện') -> throw error
         if(projectStage.getStageStatus().getStageStatusId()!=2)
