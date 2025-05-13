@@ -39,7 +39,7 @@ public class RecommendTeacherServiceImpl implements RecommendTeacherService {
 
         Pageable pageable = AppUtils.createPageable(pageNumber, pageSize, sortBy, sortDir);
 
-        Student student = studentRepository.findById(accountDto.getAccountId())
+        Student student = studentRepository.findByAccount_AccountId(accountDto.getAccountId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Student is not exists with given account id: "+accountDto.getAccountId()));
 
         // get faculty of student
