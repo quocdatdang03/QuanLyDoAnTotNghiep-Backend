@@ -173,4 +173,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        SELECT COUNT(*) FROM Student s
+            WHERE (:facultyId IS NULL OR s.clazz.faculty.facultyId = :facultyId)
+                    AND (:classId IS NULL OR s.clazz.classId = :classId)
+    """)
+    int countAllStudents(
+            @Param("facultyId") Long facultyId,
+            @Param("classId") Long classId
+    );
+
 }

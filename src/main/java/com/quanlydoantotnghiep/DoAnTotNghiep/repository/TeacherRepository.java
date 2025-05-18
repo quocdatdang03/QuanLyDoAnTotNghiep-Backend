@@ -54,4 +54,15 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        SELECT COUNT(*) FROM Teacher t
+            JOIN t.account a
+            JOIN a.roles r
+                WHERE (:facultyId IS NULL OR t.faculty.facultyId = :facultyId)
+                AND r.roleName <> 'ADMIN'
+    """)
+    int countAllTeachers(
+            @Param("facultyId") Long facultyId
+    );
+
 }
