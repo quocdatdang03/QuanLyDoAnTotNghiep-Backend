@@ -22,10 +22,11 @@ public class InstructorProgressReportController {
     public ResponseEntity<?> getAllProgressReportsByProject(
             @RequestParam("projectId") Long projectId,
             @RequestParam(name = "sortDir", required = false, defaultValue = "desc") String sortDir,
-            @RequestParam(name = "stageId", required = false) Long stageId
+            @RequestParam(name = "stageId", required = false) Long stageId,
+            @RequestParam(name = "status", required = false) Boolean progressReportStatus
     ) {
 
-        return ResponseEntity.ok(progressReportService.getAllProgressReportByProject(projectId, stageId, sortDir));
+        return ResponseEntity.ok(progressReportService.getAllProgressReportByProject(projectId, stageId, sortDir, progressReportStatus));
     }
 
     @GetMapping("/{progressReportId}")
