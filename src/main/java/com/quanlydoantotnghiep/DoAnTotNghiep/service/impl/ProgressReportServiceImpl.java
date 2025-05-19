@@ -188,7 +188,7 @@ public class ProgressReportServiceImpl implements ProgressReportService {
 
     @Override
     public List<ProgressReportDto>
-    getAllProgressReportByProject(Long projectId, Long stageId, String sortDir) {
+    getAllProgressReportByProject(Long projectId, Long stageId, String sortDir, Boolean progressReportStatus) {
 
         // Sort by createdAt by descending (Lấy cái mới nhất trước)
         Sort sort = Sort.by("createdAt");
@@ -199,7 +199,8 @@ public class ProgressReportServiceImpl implements ProgressReportService {
             sort = sort.descending();
 
         // Can Filter by stage or not
-        List<ProgressReport> progressReports = progressReportRepository.findProgressReportByProject(projectId, stageId, sort);
+        List<ProgressReport> progressReports = progressReportRepository
+                .findProgressReportByProject(projectId, stageId, progressReportStatus, sort);
 
         return progressReports.stream().map(
                 item -> {

@@ -14,10 +14,12 @@ public interface ProgressReportRepository extends JpaRepository<ProgressReport, 
         SELECT p FROM ProgressReport p
             WHERE p.projectStage.project.projectId = :projectId
                 AND (:stageId IS NULL OR p.projectStage.stage.stageId = :stageId)
+                AND (:progressReportStatus IS NULL OR p.isApproved = :progressReportStatus)
     """)
     List<ProgressReport> findProgressReportByProject(
             @Param("projectId") Long projectId,
             @Param("stageId") Long stageId,
+            @Param("progressReportStatus") Boolean progressReportStatus,
             Sort sort
     );
 }
