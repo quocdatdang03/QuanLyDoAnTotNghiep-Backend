@@ -6,9 +6,9 @@ spring:
     name: QuanLyDoAnTotNghiep_docker
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://nozomi.proxy.rlwy.net:44424/db_doantotnghiep_production
+    url: jdbc:mysql://metro.proxy.rlwy.net:53397/db_doantotnghiep_production
     username: root
-    password: yaOaWbGtLErNlvHgWAAdFzglAeaMrfed
+    password: OWAsVJUWoTayepzqfrxWwqOIHaUCTBix
   jpa:
     hibernate:
       ddl-auto: update
