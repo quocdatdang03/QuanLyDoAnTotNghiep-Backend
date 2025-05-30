@@ -371,6 +371,26 @@ public class StageServiceImpl implements StageService {
         return stageDto;
     }
 
+    @Override
+    public int countAllStagesByInstructor(Long instructorId) {
+
+        // get current semester:
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+        if(currentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Current semester is no available!");
+
+        // get instructor
+        Teacher teacher = teacherRepository.findById(instructorId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given id: "+instructorId));
+
+        // count all stages by instructor and current semester
+        return stageRepository
+                .countByTeacherTeacherIdAndSemesterSemesterId(
+                        instructorId,
+                        currentSemester.getSemesterId()
+                );
+    }
+
     private StageDto convertToStageDto(Stage item) {
 
         StageDto stageDto = modelMapper.map(item, StageDto.class);

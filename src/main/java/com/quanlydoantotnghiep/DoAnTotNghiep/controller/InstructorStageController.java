@@ -38,6 +38,14 @@ public class InstructorStageController {
         return ResponseEntity.ok(stageService.getStageById(stageId));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> countAllStagesByInstructor(
+            @RequestParam(name = "instructorId") Long instructorId
+    ) {
+
+        return ResponseEntity.ok(stageService.countAllStagesByInstructor(instructorId));
+    }
+
     @GetMapping("/project/{projectId}/currentStage")
     public ResponseEntity<StageDto>  getCurrentStageByProject(
             @RequestHeader("Authorization") String jwtToken,

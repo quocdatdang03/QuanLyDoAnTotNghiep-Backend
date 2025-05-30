@@ -29,4 +29,5 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 
     List<Stage> findByTeacherTeacherIdAndSemesterSemesterId(Long teacherId, Long semesterId, Sort sort);
 
+    int countByTeacherTeacherIdAndSemesterSemesterId(Long teacherId, Long semesterId);
 }
