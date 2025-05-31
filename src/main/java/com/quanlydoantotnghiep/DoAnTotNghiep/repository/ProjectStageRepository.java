@@ -46,5 +46,12 @@ public interface ProjectStageRepository extends JpaRepository<ProjectStage, Long
     """)
     List<ProjectStage> findLatestCompletedProjectStageByProjectId(@Param("projectId") Long projectId);
 
-
+    @Query("""
+        SELECT COUNT (ps) FROM ProjectStage ps
+            WHERE ps.project.projectId = :projectId
+                AND ps.stageStatus.stageStatusId = 3
+    """)
+    int countAllCompletedStagesByProject(
+            @Param("projectId") Long projectId
+    );
 }

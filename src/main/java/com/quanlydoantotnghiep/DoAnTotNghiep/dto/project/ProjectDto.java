@@ -3,7 +3,6 @@ package com.quanlydoantotnghiep.DoAnTotNghiep.dto.project;
 
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.SemesterDto;
 import com.quanlydoantotnghiep.DoAnTotNghiep.dto.StudentDto;
-import com.quanlydoantotnghiep.DoAnTotNghiep.entity.Student;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -25,5 +24,8 @@ public class ProjectDto {
     ProjectStatusDto projectStatus;
     SemesterDto semester;
     StudentDto student;
+    String inProgressStage; // giai đoạn đang thực hiện
+    int numberOfCompletedStages; // số giai đoạn đã hoàn thành
+    int totalStages; // tổng số giai đoạn cần làm
     LocalDateTime createdAt;
 }

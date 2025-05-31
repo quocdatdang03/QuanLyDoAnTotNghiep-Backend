@@ -41,6 +41,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final ProjectStatusRepository projectStatusRepository;
     private final ProjectStageRepository projectStageRepository;
     private final ModelMapper modelMapper;
+    private final StageRepository stageRepository;
 
 
     @Override
@@ -207,6 +208,9 @@ public class InstructorServiceImpl implements InstructorService {
 
     private ProjectDto convertToProjectDto(Project project, StudentSemester studentSemester) {
 
+        // InProgress Stage
+        ProjectStage inProgressProjectStage = projectStageRepository.findInProgressProjectStageByProjectId(project.getProjectId());
+
         ProjectDto projectDto = ProjectDto.builder()
                 .projectId(project.getProjectId())
                 .projectName(project.getProjectName())
@@ -215,6 +219,14 @@ public class InstructorServiceImpl implements InstructorService {
                 .projectFiles(project.getProjectFiles().stream()
                     .map((item) -> modelMapper.map(item, ProjectFileDto.class)).collect(Collectors.toList())
                 )
+                .inProgressStage(
+                        inProgressProjectStage!=null ? inProgressProjectStage.getStage().getStageName() : null
+                )
+                .numberOfCompletedStages(projectStageRepository.countAllCompletedStagesByProject(project.getProjectId()))
+                .totalStages(stageRepository.countByTeacherTeacherIdAndSemesterSemesterId(
+                        project.getTeacher().getTeacherId(),
+                        studentSemester.getSemester().getSemesterId()
+                ))
                 .createdAt(project.getCreatedAt())
                 .build();
 
