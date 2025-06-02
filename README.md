@@ -49,4 +49,4 @@ The system enables:
 ## 🔗 Frontend Repository
 
 This backend API is used by the Frontend client built with ReactJS.  
-👉 Check it out here: [Graduation Thesis Management – Frontend (ReactJS)](https://github.com/your-username/frontend-repo-name)
+👉 Check it out here: [Graduation Thesis Management – Frontend (ReactJS)](https://github.com/quocdatdang03/QuanLyDoAnTotNghiep-Frontend)
