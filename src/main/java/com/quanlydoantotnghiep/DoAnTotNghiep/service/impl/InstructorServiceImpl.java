@@ -154,9 +154,9 @@ public class InstructorServiceImpl implements InstructorService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
 
-        // after decline project -> change project status to 4 (Bị từ chối)
-        ProjectStatus projectStatus = projectStatusRepository.findById(4L)
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project status is not exists with given id: "+4));
+        // after decline project -> change project status to 3 (Bị từ chối)
+        ProjectStatus projectStatus = projectStatusRepository.findById(3L)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project status is not exists with given id: "+3));
 
         project.setProjectStatus(projectStatus);
 

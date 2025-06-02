@@ -58,7 +58,7 @@ public class Account {
     // (E.g. userRepository.findByEmail(email); thì nó sẽ chỉ select từ table user, chỉ khi ta gọi user.getRoles(); thì nó mới load từ table roles)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "TaiKhoan_VaiTro",
+            name = "TAIKHOAN_VAITRO",
             joinColumns = @JoinColumn(name = "maTaiKhoan"),
             inverseJoinColumns = @JoinColumn(name="maVaiTro")
     )

@@ -118,9 +118,9 @@ public class ProjectServiceImpl implements ProjectService {
         if(!account.getStudent().getStudentId().equals(project.getStudentSemester().getStudent().getStudentId()))
             throw new ApiException(HttpStatus.BAD_REQUEST, "Project is not valid!");
 
-        // Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted
-        if(project.getProjectStatus().getProjectStatusId() != 1 && project.getProjectStatus().getProjectStatusId() != 4)
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted for using function updateProject");
+        // Only project with status id: 1 (Chờ duyệt) and 3 (Bị từ chối) is accepted
+        if(project.getProjectStatus().getProjectStatusId() != 1 && project.getProjectStatus().getProjectStatusId() != 3)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ duyệt) and 3 (Bị từ chối) is accepted for using function updateProject");
 
         project.setProjectName(updateProjectRequest.getProjectName());
         project.setProjectContent(updateProjectRequest.getProjectContent());
@@ -166,9 +166,9 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectFile projectFile = projectFileRepository.findById(projectFileId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "ProjectFile is not exists with given id: "+projectFileId));
 
-        // Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted
-        if(projectFile.getProject().getProjectStatus().getProjectStatusId() != 1 && projectFile.getProject().getProjectStatus().getProjectStatusId() != 4)
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ duyệt) and 4 (Bị từ chối) is accepted for using function deleteProjectFile");
+        // Only project with status id: 1 (Chờ duyệt) and 3 (Bị từ chối) is accepted
+        if(projectFile.getProject().getProjectStatus().getProjectStatusId() != 1 && projectFile.getProject().getProjectStatus().getProjectStatusId() != 3)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Only project with status id: 1 (Chờ duyệt) and 3 (Bị từ chối) is accepted for using function deleteProjectFile");
 
         projectFileRepository.delete(projectFile);
 
