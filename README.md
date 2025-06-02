@@ -45,3 +45,8 @@ The system enables:
 - **Database**: *MySQL*
 - **Other tools**: *Docker, Postman*
 - **IDE**: IntelliJ IDEA
+
+## 🔗 Frontend Repository
+
+This backend API is used by the Frontend client built with ReactJS.  
+👉 Check it out here: [Graduation Thesis Management – Frontend (ReactJS)](https://github.com/your-username/frontend-repo-name)
