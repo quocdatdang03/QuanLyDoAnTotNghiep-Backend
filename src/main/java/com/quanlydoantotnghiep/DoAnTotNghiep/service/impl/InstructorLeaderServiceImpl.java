@@ -181,6 +181,11 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
         // get faculty id
         Long facultyId = account.getTeacher().getFaculty().getFacultyId();
 
+        // get current semester
+        Semester currentSemester = semesterRepository.findByIsCurrentIsTrue();
+        if(currentSemester==null)
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Current semester is not available");
+
         // get all teachers by faculty id:
         Sort sort = Sort.by(AppConstant.TEACHER_DEFAULT_SORT_BY).ascending();
         List<Teacher> teachers = teacherRepository.findByFacultyFacultyId(facultyId, sort);
@@ -196,6 +201,7 @@ public class InstructorLeaderServiceImpl implements InstructorLeaderService {
                             modelMapper.map(item.getFaculty(), FacultyDto.class)
                     );
                     teacherAccountResponse.setLeader(item.isLeader());
+                    teacherAccountResponse.setNumberOfAssignedStudent(studentSemesterRepository.countAllStudentSemesterByInstructor(currentSemester.getSemesterId(), item.getTeacherId()));
 
                     return teacherAccountResponse;
                 }

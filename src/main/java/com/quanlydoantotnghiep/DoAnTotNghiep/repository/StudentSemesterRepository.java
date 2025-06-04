@@ -43,4 +43,13 @@ public interface StudentSemesterRepository extends JpaRepository<StudentSemester
             @Param("classId") Long classId,
             @Param("semesterId") Long semesterId
     );
+
+    @Query("""
+        SELECT COUNT(s) FROM StudentSemester s
+            WHERE s.instructor.teacherId = :instructorId AND s.semester.semesterId = :semesterId
+    """)
+    int countAllStudentSemesterByInstructor(
+            @Param("semesterId") Long semesterId,
+            @Param("instructorId") Long instructorId
+    );
 }

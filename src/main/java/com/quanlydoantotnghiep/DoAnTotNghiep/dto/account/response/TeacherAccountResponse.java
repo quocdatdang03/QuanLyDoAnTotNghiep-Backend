@@ -33,4 +33,5 @@ public class TeacherAccountResponse {
     boolean enable;
     DegreeDto degree;
     FacultyDto faculty;
+    int numberOfAssignedStudent;
 }
