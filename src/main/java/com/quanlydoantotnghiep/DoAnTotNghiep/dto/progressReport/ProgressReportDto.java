@@ -25,4 +25,5 @@ public class ProgressReportDto {
     List<ProgressReviewDto> progressReviews;
     StageDto stage;
     LocalDateTime createdDate;
+    LocalDateTime updatedDate;
 }

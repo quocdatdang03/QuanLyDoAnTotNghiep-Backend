@@ -22,4 +22,5 @@ public class ProgressReviewDto {
     List<ProgressReviewFileDto> progressReviewFiles;
     TeacherAccountResponse teacher;
     LocalDateTime createdDate;
+    LocalDateTime updatedDate;
 }

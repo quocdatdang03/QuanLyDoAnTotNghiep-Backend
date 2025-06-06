@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .anyMatch(item -> item.getSemester().isCurrent() && !item.isFlagDelete());
 
             if(!isInCurrentSemester)
-                throw new ApiException(HttpStatus.UNAUTHORIZED, "Sinh viên chưa đăng ký đồ án tốt nghiệp trong học kỳ hiện tại, không thể đăng nhập");
+                throw new ApiException(HttpStatus.UNAUTHORIZED, "Sinh viên chưa đăng ký đồ án tốt nghiệp trong học kỳ hiện tại,  không thể đăng nhập");
         }
 
         return new CustomUserDetails(account);

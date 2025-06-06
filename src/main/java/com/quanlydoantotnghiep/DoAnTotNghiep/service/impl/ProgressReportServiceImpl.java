@@ -231,6 +231,7 @@ public class ProgressReportServiceImpl implements ProgressReportService {
                                 .map(progressReportFile -> modelMapper.map(progressReportFile, ProgressReportFileDto.class)).collect(Collectors.toList())
                 )
                 .createdDate(progressReport.getCreatedAt())
+                .updatedDate(progressReport.getUpdatedAt())
                 .build();
 
         // convert and set stage dto
@@ -261,6 +262,7 @@ public class ProgressReportServiceImpl implements ProgressReportService {
                     ProgressReviewDto progressReviewDto = modelMapper.map(progressReview, ProgressReviewDto.class);
 
                     progressReviewDto.setTeacher(teacherAccountResponse);
+                    progressReviewDto.setUpdatedDate(progressReview.getUpdatedAt());
 
                     return progressReviewDto;
                 })).sorted((o1, o2) -> o2.getCreatedDate().compareTo(o1.getCreatedDate())).collect(Collectors.toList());
@@ -276,7 +278,7 @@ public class ProgressReportServiceImpl implements ProgressReportService {
         ProgressReportFile progressReportFile = progressReportFileRepository.findById(progressReportFileId)
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "ProgressReportFile is not exists with given id: "+progressReportFileId));
 
-        if(progressReportFile.getProgressReport().isApproved() || progressReportFile.getProgressReport().getProgressReviews().size() > 0)
+        if(progressReportFile.getProgressReport().isApproved() || progressReportFile.getProgressReport().getProjectStage().getStageStatus().getStageStatusId()==3)
             throw new ApiException(HttpStatus.BAD_REQUEST, "Can not delete this ProgressReportFile");
 
         progressReportFileRepository.deleteById(progressReportFile.getProgressReportFileId());

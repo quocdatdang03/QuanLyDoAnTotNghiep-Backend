@@ -22,7 +22,7 @@ public class StageFile {
     @Column(name = "tenTaiLieu", nullable = false)
     String nameFile;
 
-    @Column(name = "duongDanTaiLieu", nullable = false)
+    @Column(name = "duongDanTaiLieu", nullable = false, columnDefinition = "TEXT")
     String pathFile;
 
     @ManyToOne
