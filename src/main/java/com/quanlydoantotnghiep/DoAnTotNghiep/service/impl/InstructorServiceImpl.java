@@ -223,7 +223,8 @@ public class InstructorServiceImpl implements InstructorService {
                         inProgressProjectStage!=null ? inProgressProjectStage.getStage().getStageName() : null
                 )
                 .numberOfCompletedStages(projectStageRepository.countAllCompletedStagesByProject(project.getProjectId()))
-                .totalStages(stageRepository.countByTeacherTeacherIdAndSemesterSemesterId(
+                .totalStages(projectStageRepository.countByProjectProjectId(project.getProjectId()))
+                .totalCreatedStages(stageRepository.countByTeacherTeacherIdAndSemesterSemesterId(
                         project.getTeacher().getTeacherId(),
                         studentSemester.getSemester().getSemesterId()
                 ))

@@ -93,6 +93,20 @@ public class InstructorStageController {
         return ResponseEntity.ok(stageService.deleteStage(stageId, accountDto));
     }
 
+    @PostMapping("/project/apply")
+    public ResponseEntity<String> applyAllStagesToProject(
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestParam("semesterId") Long semesterId,
+            @RequestParam("projectId") Long projectId
+    ) {
+
+        AccountDto accountDto = getAccountDtoByJwtToken(jwtToken);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(stageService.applyAllStagesToProject(accountDto, semesterId, projectId));
+    }
+
     @DeleteMapping("/stageFile/{stageFileId}")
     public ResponseEntity<String> deleteStageFileById(
             @PathVariable("stageFileId") Long stageFileId

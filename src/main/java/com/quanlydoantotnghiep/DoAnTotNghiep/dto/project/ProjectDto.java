@@ -26,6 +26,7 @@ public class ProjectDto {
     StudentDto student;
     String inProgressStage; // giai đoạn đang thực hiện
     int numberOfCompletedStages; // số giai đoạn đã hoàn thành
-    int totalStages; // tổng số giai đoạn cần làm
+    int totalStages; // tổng số giai đoạn cần làm (đã được phân cho sinh viên làm)
+    int totalCreatedStages; // tổng số giai đoạn mà GVHD đã tạo
     LocalDateTime createdAt;
 }

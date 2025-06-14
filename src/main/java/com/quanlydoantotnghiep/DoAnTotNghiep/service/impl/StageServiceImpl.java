@@ -391,6 +391,44 @@ public class StageServiceImpl implements StageService {
                 );
     }
 
+    @Transactional
+    @Override
+    public String applyAllStagesToProject(AccountDto accountDto, Long semesterId, Long projectId) {
+
+        // get teacher:
+        Teacher teacher = teacherRepository.findByAccount_Code(accountDto.getCode())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Teacher is not exists with given code: "+accountDto.getCode()));
+
+        // get semester:
+        Semester semester = semesterRepository.findById(semesterId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Semester is not exists with given id: "+semesterId));
+
+        // Sort by stageOrder by ascending:
+        Sort sort = Sort.by("stageOrder").ascending();
+
+        List<Stage> stages = stageRepository.findAllStagesByTeacherAndSemester(
+                teacher.getTeacherId(), semester.getSemesterId(), sort
+        );
+
+        // get project
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Project is not exists with given id: "+projectId));
+
+        // apply all stages to project:
+        stages.forEach((stage) -> {
+
+            ProjectStage projectStage = ProjectStage.builder()
+                    .project(project)
+                    .stage(stage)
+                    .stageStatus(stage.getStageStatus())
+                    .build();
+
+            projectStageRepository.save(projectStage);
+        });
+
+        return "Apply all stages to project with id: "+projectId+" successfully";
+    }
+
     private StageDto convertToStageDto(Stage item) {
 
         StageDto stageDto = modelMapper.map(item, StageDto.class);

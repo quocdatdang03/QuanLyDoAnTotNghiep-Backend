@@ -54,4 +54,6 @@ public interface ProjectStageRepository extends JpaRepository<ProjectStage, Long
     int countAllCompletedStagesByProject(
             @Param("projectId") Long projectId
     );
+
+    int countByProjectProjectId(Long projectId);
 }

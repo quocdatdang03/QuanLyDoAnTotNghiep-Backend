@@ -21,6 +21,7 @@ public interface StageService {
     List<StageDto> updateStageOrder(AccountDto accountDto, List<Long> newStageIds);
     StageDto getCurrentStageByProject(Long projectId, AccountDto accountDto);
     int countAllStagesByInstructor(Long instructorId);
+    String applyAllStagesToProject(AccountDto accountDto, Long semesterId, Long projectId);
     // +++++++ method for role Teacher
 
     // +++++++ method for role Student
