@@ -6,9 +6,9 @@ spring:
     name: QuanLyDoAnTotNghiep_docker
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://gateway01.ap-southeast-1.prod.aws.tidbcloud.com:4000/test?useSSL=true&requireSSL=true&verifyServerCertificate=false
-    username: 497MCcedzi5DjR8.root
-    password: FuilwpINS3t7aiLi
+    url: jdbc:mysql://gateway01.us-west-2.prod.aws.tidbcloud.com:4000/test?useSSL=true&requireSSL=true&verifyServerCertificate=false
+    username: 4KdRvhqQUVTXUiR.root
+    password: ridghgGP4dLZC1Xn
   #    url: jdbc:mysql://metro.proxy.rlwy.net:53397/db_doantotnghiep_production
 #    username: root
 #    password: OWAsVJUWoTayepzqfrxWwqOIHaUCTBix
