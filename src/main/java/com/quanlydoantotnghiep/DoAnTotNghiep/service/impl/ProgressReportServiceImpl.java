@@ -85,7 +85,6 @@ public class ProgressReportServiceImpl implements ProgressReportService {
 
         ProgressReport savedProgressReport = progressReportRepository.save(progressReport);
 
-
         // convert to progressReportDto:
         ProgressReportDto progressReportDto = ProgressReportDto.builder()
                 .progressReportId(savedProgressReport.getProgressReportId())

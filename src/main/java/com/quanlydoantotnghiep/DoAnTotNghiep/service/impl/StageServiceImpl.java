@@ -271,8 +271,12 @@ public class StageServiceImpl implements StageService {
 
         savedStage.getProjectStages().forEach((item) -> {
 
-            item.setStageStatus(newStageStatus);
-            projectStageRepository.save(item);
+            // Không update stageStatus cho projectStage mà có stage đang là 3 ('Đã hoàn thành')
+            if(item.getStageStatus().getStageStatusId() != 3)
+            {
+                item.setStageStatus(newStageStatus);
+                projectStageRepository.save(item);
+            }
         });
 
         return convertToStageDto(savedStage);
